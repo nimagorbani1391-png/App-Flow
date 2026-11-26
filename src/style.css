@@ -244,3 +244,183 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 .preview-heading{font-weight:800}.preview-checkbox{justify-content:flex-start}
 @media(max-width:900px){.builder-workspace{grid-template-columns:210px minmax(280px,1fr);}.builder-properties{grid-column:1/-1;min-height:180px}}
 @media(max-width:600px){.create-card{min-height:118px;padding:19px}.create-card .create-icon{width:54px;height:54px}.create-card .create-copy strong{font-size:16px}.builder-workspace{display:flex;flex-direction:column;padding:9px;gap:9px}.builder-layers{order:1;max-height:300px}.builder-canvas-wrap{order:2;min-height:620px}.builder-properties{order:3;min-height:160px}.builder-canvas{min-height:540px;padding:6px}.preview-device{min-height:540px;height:540px}.preview-content{min-height:470px}.preview-device-tablet{width:100%;min-height:540px}.preview-device-desktop{width:100%;min-height:540px}}
+
+
+/* =========================================================
+   APP FLOW MVP — Neon blue studio theme
+   ========================================================= */
+:root{
+  color-scheme:dark;
+  font-family:Vazir,Tahoma,sans-serif;
+  color:#e9f5ff;
+  background:#070c16;
+  --accent:#29c9ff;
+  --accent-strong:#159ce8;
+  --accent-soft:rgba(41,201,255,.11);
+  --surface:#0d1727;
+  --surface-raised:#111e31;
+  --surface-border:rgba(105,180,225,.16);
+  --muted:#8193aa;
+  --text:#e9f5ff;
+}
+html,body,#root{min-height:100%;background:#070c16}
+body{background:radial-gradient(ellipse at 50% -20%,rgba(23,116,177,.18),transparent 48%),#070c16;color:var(--text)}
+button,input,textarea{font-family:inherit}
+button{transition:background .18s ease,border-color .18s ease,color .18s ease,transform .18s ease,box-shadow .18s ease}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid #35caff;outline-offset:2px}
+.app-shell{min-height:100vh;background:transparent}
+.brand-header{
+  min-height:104px;padding:15px 24px;
+  background:rgba(8,16,29,.88);
+  border-bottom:1px solid rgba(67,179,232,.17);
+  box-shadow:0 10px 35px rgba(0,0,0,.14);
+  backdrop-filter:blur(18px)
+}
+.brand-title{color:#f0f9ff;font-size:34px;letter-spacing:-1px;text-shadow:0 0 24px rgba(41,201,255,.22)}
+.brand-title::after{content:"استودیو ساخت اپلیکیشن اندروید";display:block;margin-top:3px;color:#7e9ab3;font-size:10px;letter-spacing:0;font-weight:500;text-shadow:none}
+.menu-toggle{right:max(22px,calc((100% - 1080px)/2));border:1px solid var(--surface-border);background:#101d30;color:#cceeff}
+.menu-toggle:hover{border-color:rgba(41,201,255,.5);background:rgba(41,201,255,.12);color:#5bd6ff}
+.menu-backdrop{background:rgba(1,7,15,.68);backdrop-filter:blur(5px)}
+.hamburger-menu{background:#0b1524;border-color:var(--surface-border);box-shadow:-18px 0 55px rgba(0,0,0,.4)}
+.menu-item{color:#9db1c8}
+.menu-item:hover,.menu-item.active{color:#54d5ff;background:rgba(41,201,255,.1)}
+.app-layout{width:min(1120px,calc(100% - 40px));margin:30px auto 50px}
+.workspace{min-height:560px;padding:clamp(18px,3vw,34px);background:linear-gradient(145deg,rgba(16,30,49,.96),rgba(10,19,33,.98));border:1px solid var(--surface-border);border-radius:20px;box-shadow:0 22px 70px rgba(0,0,0,.22)}
+.page-heading{margin-bottom:23px}
+.page-heading h2{color:#edf8ff;font-size:22px}
+.page-heading p{color:#8195ac}
+.project-count{border-color:var(--surface-border);background:rgba(41,201,255,.06);color:#a9c5dc}
+.project-count svg{color:#48ceff}
+.create-card{
+  position:relative;min-height:118px;padding:20px 22px;gap:17px;
+  border:1px solid rgba(41,201,255,.28);border-radius:15px;
+  background:linear-gradient(105deg,rgba(15,87,130,.25),rgba(17,34,55,.9) 65%,rgba(15,27,45,.95));
+  box-shadow:inset 0 1px rgba(255,255,255,.035),0 8px 28px rgba(0,0,0,.12);
+  text-align:right;cursor:pointer
+}
+.create-card:hover{border-color:rgba(41,201,255,.65);background:linear-gradient(105deg,rgba(18,111,164,.28),rgba(18,40,65,.96));box-shadow:0 0 0 3px rgba(41,201,255,.06),0 14px 35px rgba(0,0,0,.2);transform:translateY(-1px)}
+.create-icon{width:54px;height:54px;flex:0 0 54px;border-radius:14px;background:linear-gradient(145deg,#3ed7ff,#168cde);color:#041321;box-shadow:0 0 25px rgba(41,201,255,.22)}
+.create-copy strong{color:#f1faff;font-size:17px}
+.create-copy span{color:#92aec5;font-size:12px}
+.create-card-arrow{margin-right:auto;color:#52d5ff;display:grid;place-items:center}
+.platform-notice{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px 14px;border:1px solid rgba(74,157,205,.16);border-radius:12px;background:rgba(8,19,33,.7)}
+.platform-pulse{width:8px;height:8px;flex:0 0 8px;border-radius:50%;background:#36d4ff;box-shadow:0 0 0 5px rgba(54,212,255,.1),0 0 14px rgba(54,212,255,.55)}
+.platform-notice>div{min-width:0;display:flex;flex-direction:column;gap:4px}
+.platform-notice strong{color:#d9f4ff;font-size:11px}
+.platform-notice span:not(.platform-pulse):not(.platform-tag){color:#829bb2;font-size:10px;line-height:1.8}
+.platform-tag{margin-right:auto;padding:5px 8px;border:1px solid rgba(41,201,255,.2);border-radius:6px;color:#58d6ff;font-size:9px;letter-spacing:.7px}
+.projects-list{margin-top:20px;min-height:260px;border-color:var(--surface-border);border-radius:14px;background:rgba(8,17,30,.62)}
+.projects-list-heading{min-height:58px;border-bottom-color:rgba(105,180,225,.12)}
+.projects-list-title{color:#4dcfff}
+.projects-list-title h3{color:#dceeff}
+.projects-list-total,.project-count{color:#819ab2}
+.projects-list-empty{color:#8ba0b6}
+.projects-list-empty svg{color:#4aaed7}
+.projects-list-empty small{color:#667f98}
+.project-list-toolbar{border-bottom-color:rgba(105,180,225,.1)}
+.project-search{background:#0a1525;border-color:var(--surface-border)}
+.project-search input{background:transparent;color:#eaf7ff}
+.project-search input::placeholder{color:#607991}
+.backup-button{border-color:rgba(41,201,255,.2);background:rgba(41,201,255,.08);color:#64d7ff}
+.backup-button:hover{background:rgba(41,201,255,.16);border-color:rgba(41,201,255,.5)}
+.project-grid{gap:10px;padding:12px}
+.project-card{border-color:rgba(105,180,225,.13);background:linear-gradient(145deg,#111f32,#0c1727);border-radius:12px}
+.project-card:hover{border-color:rgba(41,201,255,.42);box-shadow:0 8px 25px rgba(0,0,0,.18)}
+.project-card-icon{background:rgba(41,201,255,.1);color:#4ccfff}
+.project-card-main strong{color:#e5f4ff}
+.project-card-main span{color:#8298ad}
+.project-card-actions{border-top-color:rgba(105,180,225,.12)}
+.project-card-actions button{border-color:rgba(105,180,225,.15);background:#122137;color:#9fb6cb}
+.project-card-actions button:first-child{border-color:rgba(41,201,255,.24);background:rgba(41,201,255,.1);color:#59d4ff}
+.project-card-actions button:hover{border-color:rgba(41,201,255,.5);background:rgba(41,201,255,.15);color:#8be2ff}
+.project-card-actions button:last-child{color:#ff8798}
+.projects-list-empty.compact{color:#9bb0c5}
+
+/* Builder workspace */
+.builder-shell{background:#080e19;color:#eaf6ff}
+.builder-header,.builder-tabs,.builder-footer{background:#0c1727;border-color:rgba(105,180,225,.15);color:#91a9c0}
+.builder-back,.builder-history button{border-color:rgba(105,180,225,.18);background:#122138;color:#b6d4e9}
+.builder-back:hover,.builder-history button:hover:not(:disabled){border-color:rgba(41,201,255,.5);background:rgba(41,201,255,.12);color:#5bd8ff}
+.builder-name-wrap input{color:#eaf7ff}
+.builder-name-wrap span{color:#7892aa}
+.save-indicator.saved{color:#50d8b0}
+.save-indicator.saving{color:#ffd17b}
+.save-indicator.error{color:#ff8e9a}
+.builder-save{background:linear-gradient(135deg,#35d5ff,#168fdf);color:#031321;box-shadow:0 5px 18px rgba(35,183,240,.18)}
+.builder-save:hover{box-shadow:0 0 0 3px rgba(41,201,255,.13),0 8px 24px rgba(35,183,240,.2)}
+.builder-tabs{border-bottom-color:rgba(105,180,225,.13)}
+.builder-tabs span{color:#7f96ae}
+.builder-tabs span.active{border-color:#32caff;color:#dff7ff}
+.builder-workspace{background:transparent}
+.builder-panel{background:linear-gradient(155deg,#101d30,#0c1727);border-color:rgba(105,180,225,.15);border-radius:14px}
+.builder-panel-title>span{color:#dceeff}
+.builder-panel-title>svg,.builder-panel-title span svg{color:#42ceff}
+.builder-panel-title>button{background:rgba(255,103,128,.1);color:#ff8a9e}
+.builder-add-title,.builder-layers-heading{color:#8ca6bd}
+.builder-add-grid button{border-color:rgba(105,180,225,.14);background:#122138;color:#a9c0d5}
+.builder-add-grid button svg{color:#48d0ff}
+.builder-add-grid button:hover{border-color:rgba(41,201,255,.5);background:rgba(41,201,255,.1);color:#6bdcff}
+.builder-layers-heading{border-bottom-color:rgba(105,180,225,.13)}
+.builder-layers-heading small{color:#7791a8}
+.layer-row{background:rgba(18,34,55,.72)}
+.layer-row.selected{border-color:rgba(41,201,255,.42);background:rgba(41,201,255,.1)}
+.layer-select{color:#bfd2e4}
+.layer-number{background:#1b3049;color:#91aec7}
+.layer-actions button{color:#86a1b9}
+.layer-actions button:hover:not(:disabled){background:rgba(41,201,255,.13);color:#5bd8ff}
+.builder-muted,.builder-panel-note{color:#8299af}
+.builder-canvas-wrap{border-color:rgba(105,180,225,.15);background:radial-gradient(ellipse at 50% 35%,rgba(26,102,151,.2),transparent 60%),#0b1626}
+.canvas-toolbar{color:#a8bfd3}
+.canvas-toolbar span:first-child{color:#d4eaff}
+.preview-mode-switch{border-color:rgba(105,180,225,.18);background:#101f33}
+.preview-mode-switch button{color:#8da8c0}
+.preview-mode-switch button.active{background:rgba(41,201,255,.14);color:#5ed7ff}
+.builder-canvas{background:transparent}
+.preview-device{border-color:#18283b;background:#fff;box-shadow:0 14px 42px rgba(0,0,0,.35),0 0 0 1px rgba(70,191,240,.15)}
+.preview-element.is-selected{outline-color:#0ab9ff}
+.preview-empty svg{color:#16b8f1}
+.element-resize-handle{background:#14bdf5!important}
+.property-label,.property-field,.property-range label,.property-align>span{color:#9bb2c8}
+.builder-properties>textarea{border-color:rgba(105,180,225,.2);background:#0b1728;color:#eaf7ff;outline-color:#27caff}
+.property-field input[type=color]{border-color:rgba(105,180,225,.2);background:#122138}
+.property-range label strong{color:#dff3ff}
+.property-range input{accent-color:#29c9ff}
+.property-align button{border-color:rgba(105,180,225,.17);background:#122138;color:#9db4c9}
+.property-align button.active{border-color:rgba(41,201,255,.5);background:rgba(41,201,255,.13);color:#63d9ff}
+.property-delete-button{border-color:rgba(255,105,128,.24);background:rgba(255,105,128,.08);color:#ff8b9d}
+.builder-footer{border-top-color:rgba(105,180,225,.14)}
+.app-modal-backdrop{background:rgba(1,6,13,.78);backdrop-filter:blur(8px)}
+.app-modal{border-color:rgba(105,180,225,.2);background:#101d30;color:#e8f5ff;box-shadow:0 22px 70px rgba(0,0,0,.5)}
+.app-modal-heading h2{color:#e8f5ff}
+.app-modal-heading button{background:#1a2c43;color:#b9d1e5}
+.settings-note{border-color:rgba(105,180,225,.15);background:#0b1728;color:#a5bdd2}
+.settings-note>svg{color:#49d2ff}
+.settings-note strong{color:#e2f3ff}
+.settings-action{border-color:rgba(105,180,225,.16);background:#14243a;color:#b6ccdf}
+.settings-action:hover{border-color:rgba(41,201,255,.45);background:rgba(41,201,255,.1);color:#64d9ff}
+.cloud-status{border-top-color:rgba(105,180,225,.14);color:#f0c77a}
+.confirm-modal p{color:#b0c5d8}
+.confirm-actions button{border-color:rgba(105,180,225,.18);background:#172941;color:#c3d5e5}
+.confirm-actions .danger-action{border-color:#d94362;background:#d94362;color:white}
+.app-toast{border-color:rgba(78,202,255,.22);background:#10233a;color:#eafaff;box-shadow:0 10px 35px rgba(0,0,0,.4)}
+@media(max-width:740px){
+  .brand-header{min-height:90px;padding:12px 14px}
+  .brand-title{font-size:29px}
+  .brand-title::after{font-size:9px}
+  .menu-toggle{right:12px;background:#101d30}
+  .app-layout{width:calc(100% - 22px);margin:15px auto 28px}
+  .workspace{padding:17px 13px;border-radius:15px}
+  .page-heading h2{font-size:18px}
+  .create-card{min-height:100px;padding:14px;gap:12px}
+  .create-icon{width:46px;height:46px;flex-basis:46px}
+  .create-copy strong{font-size:14px}
+  .create-copy span{font-size:10px}
+  .platform-notice{align-items:flex-start;padding:11px 10px;gap:9px}
+  .platform-notice>div{flex:1}
+  .platform-tag{font-size:8px}
+  .builder-shell{min-height:100dvh}
+  .builder-workspace{padding:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}

@@ -377,8 +377,14 @@ function App() {
             </div>
             <button className="create-card" type="button" onClick={beginNewProject}>
               <span className="create-icon"><Plus size={23} strokeWidth={2.2} /></span>
-              <span className="create-copy"><strong>ساخت پروژه جدید</strong><span>یک پروژه تازه ایجاد کن</span></span>
+              <span className="create-copy"><strong>ساخت اپلیکیشن جدید</strong><span>طراحی بصری اپ اندرویدی خودت را شروع کن</span></span>
+              <span className="create-card-arrow"><ArrowLeft size={20} /></span>
             </button>
+            <div className="platform-notice">
+              <span className="platform-pulse" />
+              <div><strong>APP FLOW · نسخه MVP</strong><span>فعلاً طراحی و مدیریت پروژه؛ خروجی APK و AAB در مرحله بعدی اضافه می‌شود.</span></div>
+              <span className="platform-tag">ANDROID</span>
+            </div>
             <section className="projects-list" aria-label="لیست پروژه‌ها">
               <div className="projects-list-heading">
                 <div className="projects-list-title"><FolderKanban size={19} /><h3>لیست پروژه‌ها</h3></div>
