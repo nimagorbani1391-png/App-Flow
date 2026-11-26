@@ -7,3 +7,45 @@
 @media(max-width:1050px){.studio-body{grid-template-columns:48px 220px minmax(280px,1fr) 220px}.dashboard-content{padding-right:26px;padding-left:26px}.dashboard-top{padding:0 26px}.template-grid,.project-grid{gap:9px}.template-card{padding:12px 9px}.template-icon{width:36px;height:36px;flex-basis:36px}}
 @media(max-width:780px){.sidebar{width:66px;padding:20px 9px}.brand-lockup{padding:0 4px 28px}.brand-lockup>div:nth-child(2),.workspace-switch,.nav-caption,.nav-item span:not(.nav-active-dot),.nav-active-dot,.sidebar-bottom{display:none}.brand-symbol{width:43px;height:43px}.nav-item{justify-content:center;padding:0}.dashboard{width:calc(100% - 66px);margin-right:66px}.dashboard-top{padding:0 17px}.dashboard-content{padding:22px 17px}.welcome-row{padding:25px 23px;min-height:165px}.welcome-row h1{font-size:20px}.welcome-art{width:135px;flex-basis:135px;transform:scale(.82);transform-origin:center}.template-grid{grid-template-columns:1fr}.template-card{min-height:72px;padding:12px}.project-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.project-thumb{height:120px}.studio-body{grid-template-columns:46px 205px minmax(0,1fr)}.properties-panel{display:none}.properties-panel.show{display:block;position:fixed;z-index:12;top:66px;bottom:0;left:0;width:min(290px,82vw);box-shadow:10px 0 35px #1b2b451f}.studio-rail{grid-column:1}.side-panel{grid-column:2}.canvas-area{grid-column:3}.mobile-editor-tabs{display:none}}
 @media(max-width:560px){.local-badge{display:none}.dashboard-top{height:58px}.dashboard-content{padding:17px 12px}.welcome-row{min-height:145px;padding:20px 17px}.welcome-row h1{font-size:17px}.welcome-row p{max-width:220px;font-size:9px}.welcome-art{position:absolute;left:-15px;opacity:.6;transform:scale(.65)}.section-head{align-items:flex-start}.section-head h2{font-size:13px}.section-head p{font-size:9px}.text-action{font-size:9px}.project-tools{width:100%;margin-top:10px}.projects-section .section-head{flex-wrap:wrap}.search-box{flex:1}.project-grid{grid-template-columns:1fr 1fr;gap:8px}.project-thumb{height:105px}.project-meta{padding:9px}.project-meta b{max-width:115px;font-size:9px}.project-meta span{font-size:8px}.dashboard-footer{font-size:8px;gap:10px}.dashboard-footer span:last-child{text-align:left}.studio-top{height:58px;flex-basis:58px;padding:0 9px;gap:7px}.back-home{width:33px;justify-content:center;padding:0}.back-home span{display:none}.studio-project-name{gap:6px}.studio-project-name input{font-size:10px;width:min(115px,34vw)}.save-state{font-size:8px}.studio-actions{gap:5px}.publish-btn{height:32px;padding:0 8px;font-size:8px}.icon-btn{width:30px;height:30px}.studio-body{display:block;position:relative;min-height:calc(100vh - 58px)}.studio-rail{display:none}.side-panel{display:none}.side-panel.show{display:block;position:fixed;z-index:15;top:58px;right:0;bottom:48px;width:min(310px,88vw);box-shadow:-12px 0 35px #1b2b4520}.canvas-area{min-height:calc(100vh - 58px)}.canvas-toolbar{height:53px;flex-basis:53px;padding:0 12px}.device-stage{min-height:430px;padding:12px}.device.phone{width:265px;min-height:440px}.device.tablet{width:96%;min-height:400px}.mobile-editor-tabs{position:fixed;z-index:18;right:0;left:0;bottom:0;height:48px;background:#fff;border-top:1px solid #e4e9f1;display:flex;justify-content:space-around}.mobile-editor-tabs button{flex:1;border:0;background:transparent;color:#8a97a9;display:flex;align-items:center;justify-content:center;gap:7px;font-size:10px}.mobile-editor-tabs button.active{color:#315df4;font-weight:800}.properties-panel.show{top:58px;bottom:48px;width:88vw}.canvas-caption{font-size:7px}}
+
+
+/* Mobile-first navigation and a guided, uncluttered editor */
+.mobile-menu-trigger,.mobile-drawer-head{display:none}
+@media(max-width:780px){
+  .sidebar{width:278px;position:fixed;z-index:32;top:0;right:0;bottom:0;height:100dvh;padding:18px 14px;background:#fff;box-shadow:12px 0 40px #17233b20;transform:translateX(110%);transition:transform .22s ease;display:flex;align-items:stretch}
+  .sidebar.mobile-open{transform:translateX(0)}
+  .mobile-drawer-backdrop{display:block;position:fixed;inset:0;z-index:31;border:0;background:#14213b70;backdrop-filter:blur(2px)}
+  .mobile-drawer-head{display:flex;align-items:center;gap:10px;padding:2px 4px 20px;margin-bottom:17px;border-bottom:1px solid #edf0f5}
+  .mobile-drawer-head>div:nth-child(2){display:flex;flex-direction:column;gap:3px;flex:1}
+  .mobile-drawer-head strong{font-size:13px;color:#263550;letter-spacing:.5px}
+  .mobile-drawer-head small{font-size:9px;color:#98a3b3}
+  .mobile-drawer-head>button{width:32px;height:32px;border:0;border-radius:9px;background:#f2f4f8;color:#65738a;display:grid;place-items:center}
+  .brand-lockup{display:none}
+  .workspace-switch{display:flex!important;margin-bottom:19px}
+  .nav-caption{display:block!important}
+  .nav-item{justify-content:flex-start!important;padding:0 12px!important;min-height:44px}
+  .nav-item span:not(.nav-active-dot){display:inline!important}
+  .nav-active-dot{display:block!important}
+  .sidebar-bottom{display:block!important;margin-top:auto}
+  .dashboard{width:100%;margin:0}
+  .dashboard-top{padding:0 13px}
+  .mobile-menu-trigger{display:flex;align-items:center;justify-content:center;gap:6px;height:35px;padding:0 10px;border:1px solid #e5eaf2;border-radius:9px;background:#fff;color:#42516b;font-size:10px}
+  .breadcrumb{margin-left:auto}
+}
+@media(max-width:560px){
+  .dashboard-top{justify-content:space-between}
+  .mobile-menu-trigger{height:36px;padding:0 9px}
+  .dashboard-top .breadcrumb{font-size:9px}
+  .top-actions{gap:7px}
+  .studio-body{display:block}
+  .side-panel,.properties-panel{display:none!important}
+  .side-panel.show{display:block!important;position:fixed;z-index:15;top:58px;right:0;bottom:54px;width:min(330px,90vw);overflow-y:auto;box-shadow:-12px 0 35px #1b2b4520}
+  .properties-panel.show{display:block!important;position:fixed;z-index:15;top:58px;right:0;left:auto;bottom:54px;width:min(330px,90vw);overflow-y:auto;box-shadow:-12px 0 35px #1b2b4520}
+  .canvas-area{display:flex;min-height:calc(100dvh - 112px)}
+  .studio-top{position:sticky;top:0;z-index:20}
+  .mobile-editor-tabs{height:54px;bottom:0;box-shadow:0 -5px 20px #1c2b4510}
+  .mobile-editor-tabs button{flex-direction:column;gap:3px;font-size:9px}
+  .mobile-editor-tabs button.active{background:#f5f7ff}
+  .canvas-toolbar>div:first-child{margin-left:auto}
+  .canvas-caption{height:25px;flex-basis:25px}
+}

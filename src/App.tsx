@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ArrowDown, ArrowLeft, ArrowRight, ArrowUp, Bell, Check, ChevronDown,
   CircleHelp, Code2, Copy, Download, Eye, FilePlus2, Folder, Grid2X2,
-  Home, ImagePlus, Layers3, LayoutTemplate, LogOut, MoreHorizontal,
+  Home, ImagePlus, Layers3, LayoutTemplate, Menu, MoreHorizontal,
   Plus, Search, Settings2, Smartphone, Sparkles, Store, Trash2, Type,
   Upload, WandSparkles, X
 } from "lucide-react";
@@ -46,7 +46,8 @@ function App() {
   const [showTemplates, setShowTemplates] = useState(false);
   const [menuFor, setMenuFor] = useState<string | null>(null);
   const [preview, setPreview] = useState<"phone" | "tablet">("phone");
-  const [mobilePanel, setMobilePanel] = useState<"layers" | "properties">("layers");
+  const [mobilePanel, setMobilePanel] = useState<"preview" | "layers" | "properties">("preview");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const importRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => { listProjects().then(setProjects).catch(() => setProjects([])); }, []);
@@ -79,6 +80,7 @@ function App() {
   const openProject = (project: AppProject) => {
     setActive(project);
     setSelectedId(project.elements[0]?.id ?? null);
+    setMobilePanel("preview");
     setScreen("editor");
   };
 
@@ -213,7 +215,7 @@ function App() {
             </div> : <div className="no-selection"><Settings2 size={25}/><b>چیزی انتخاب نشده</b><span>برای ویرایش، یک جزء از لیست یا پیش‌نمایش انتخاب کن.</span></div>}
           </aside>
         </div>
-        <div className="mobile-editor-tabs"><button className={mobilePanel==="layers"?"active":""} onClick={()=>setMobilePanel("layers")}><Layers3 size={17}/> اجزا</button><button className={mobilePanel==="properties"?"active":""} onClick={()=>setMobilePanel("properties")}><Settings2 size={17}/> ویژگی‌ها</button></div>
+        <div className="mobile-editor-tabs"><button className={mobilePanel==="preview"?"active":""} onClick={()=>setMobilePanel("preview")}><Eye size={17}/> پیش‌نمایش</button><button className={mobilePanel==="layers"?"active":""} onClick={()=>setMobilePanel("layers")}><Layers3 size={17}/> افزودن اجزا</button><button className={mobilePanel==="properties"?"active":""} onClick={()=>setMobilePanel("properties")}><Settings2 size={17}/> تنظیمات</button></div>
         {toast && <div className="toast"><Check size={16}/>{toast}</div>}
       </div>
     );
@@ -221,17 +223,19 @@ function App() {
 
   return (
     <div className="app-shell" dir="rtl">
-      <aside className="sidebar">
+      {mobileMenuOpen && <button className="mobile-drawer-backdrop" aria-label="بستن منو" onClick={() => setMobileMenuOpen(false)}/>}
+      <aside className={mobileMenuOpen ? "sidebar mobile-open" : "sidebar"}>
+        <div className="mobile-drawer-head"><div className="brand-symbol">A</div><div><strong>APP FLOW</strong><small>منوی اصلی</small></div><button aria-label="بستن منو" onClick={() => setMobileMenuOpen(false)}><X size={20}/></button></div>
         <div className="brand-lockup"><div className="brand-symbol">A</div><div><strong>APP FLOW</strong><small>APP CREATION STUDIO</small></div></div>
         <div className="workspace-switch"><div className="workspace-avatar">N</div><div><b>فضای کاری من</b><small>حساب شخصی</small></div><ChevronDown size={15}/></div>
         <div className="nav-caption">فضای کار</div>
-        <button className="nav-item active"><Home size={18}/><span>داشبورد</span><span className="nav-active-dot"/></button>
-        <button className="nav-item" onClick={() => setShowTemplates(true)}><LayoutTemplate size={18}/><span>قالب‌ها</span></button>
-        <button className="nav-item" onClick={exportBackup}><Download size={18}/><span>پشتیبان‌گیری</span></button>
+        <button className="nav-item active" onClick={() => setMobileMenuOpen(false)}><Home size={18}/><span>داشبورد</span><span className="nav-active-dot"/></button>
+        <button className="nav-item" onClick={() => {setShowTemplates(true);setMobileMenuOpen(false);}}><LayoutTemplate size={18}/><span>قالب‌های آماده</span></button>
+        <button className="nav-item" onClick={() => {exportBackup();setMobileMenuOpen(false);}}><Download size={18}/><span>پشتیبان‌گیری</span></button>
         <div className="sidebar-bottom"><div className="help-card"><div className="help-icon"><WandSparkles size={18}/></div><b>از ایده تا اپلیکیشن</b><p>صفحه‌هایت را طراحی کن و قدم‌به‌قدم اپ خودت را بساز.</p><button onClick={() => notify("راهنمای شروع به‌زودی آماده می‌شود.")}>راهنمای شروع <ArrowLeft size={14}/></button></div><div className="user-profile"><div className="user-avatar">N</div><div><b>کاربر APP FLOW</b><small>نسخه آزمایشی</small></div><button title="تنظیمات" onClick={() => notify("تنظیمات حساب در نسخه بعدی اضافه می‌شود.")}><Settings2 size={17}/></button></div></div>
       </aside>
       <main className="dashboard">
-        <header className="dashboard-top"><div className="breadcrumb">فضای کاری <ArrowLeft size={13}/> <b>داشبورد</b></div><div className="top-actions"><span className="local-badge"><span/> ذخیره‌سازی روی دستگاه</span><button className="top-icon" title="اعلان‌ها"><Bell size={18}/></button><button className="top-avatar">N</button></div></header>
+        <header className="dashboard-top"><button className="mobile-menu-trigger" aria-label="باز کردن منو" aria-expanded={mobileMenuOpen} onClick={() => setMobileMenuOpen(true)}><Menu size={21}/><span>منو</span></button><div className="breadcrumb">فضای کاری <ArrowLeft size={13}/> <b>داشبورد</b></div><div className="top-actions"><span className="local-badge"><span/> ذخیره‌سازی روی دستگاه</span><button className="top-icon" title="اعلان‌ها"><Bell size={18}/></button><button className="top-avatar">N</button></div></header>
         <div className="dashboard-content">
           <section className="welcome-row"><div><span className="eyebrow">استودیوی ساخت اپلیکیشن</span><h1>ایده‌ات رو به <em>اپلیکیشن</em> تبدیل کن.</h1><p>بدون کدنویسی، ظاهر اپ اندرویدی خودت رو طراحی کن.</p></div><div className="welcome-art"><div className="art-orbit orbit-one"/><div className="art-orbit orbit-two"/><div className="art-phone"><div/><div/><div/></div><span className="art-spark spark-a">✳</span><span className="art-spark spark-b">✦</span></div></section>
           <section className="quick-start"><div className="section-head"><div><h2>شروع یک پروژه تازه</h2><p>یک نقطه شروع انتخاب کن؛ بقیه‌اش با توست.</p></div><button className="text-action" onClick={() => setShowTemplates(true)}>مشاهده همه قالب‌ها <ArrowLeft size={15}/></button></div><div className="template-grid">{templates.map(template => {const Icon=template.icon;return <button className="template-card" key={template.id} onClick={() => makeProject(template)}><div className={`template-icon ${template.color}`}><Icon size={21}/></div><div className="template-info"><b>{template.title}</b><span>{template.detail}</span></div><ArrowLeft className="template-arrow" size={17}/></button>;})}</div></section>
