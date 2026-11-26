@@ -1,9 +1,9 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ArrowDown, ArrowLeft, ArrowUp, Check, ChevronDown, Copy, Download,
-  FileUp, FolderKanban, FolderOpen, GraduationCap, Layers, Menu, MousePointer2,
-  Plus, Save, Settings2, Smartphone, Trash2, Type, X, FormInput, Square,
-  Undo2, Redo2, Search, MoreHorizontal, Palette, Move, FolderPlus
+  ArrowDown, ArrowLeft, ArrowUp, ChevronDown, Copy, Download, FileUp,
+  FolderKanban, FolderOpen, GraduationCap, Layers, Menu, MousePointer2, Plus,
+  Save, Settings2, Smartphone, Tablet, Monitor, Trash2, Type, X, FormInput,
+  Square, Undo2, Redo2, Search, Palette
 } from "lucide-react";
 import {
   AppProject, ElementKind, VisualElement, createElement, createProject,
