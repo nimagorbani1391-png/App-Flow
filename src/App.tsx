@@ -3,7 +3,7 @@ import {
   ArrowDown, ArrowLeft, ArrowUp, ChevronDown, Copy, Download, FileUp,
   FolderKanban, FolderOpen, GraduationCap, Layers, Menu, MousePointer2, Plus,
   Save, Settings2, Smartphone, Tablet, Monitor, Trash2, Type, X, FormInput,
-  Square, Undo2, Redo2, Search, Palette
+  Square, Undo2, Redo2, Search, Palette, Image as ImageIcon, Minus, Tag, CheckSquare, Heading, Move, Maximize2
 } from "lucide-react";
 import {
   AppProject, ElementKind, VisualElement, createElement, createProject,
@@ -22,6 +22,8 @@ function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [addMenuOpen, setAddMenuOpen] = useState(false);
   const [previewMode, setPreviewMode] = useState<"mobile" | "tablet" | "desktop">("mobile");
+  const [dragPreview, setDragPreview] = useState<{id:string;x:number;y:number;width:number;height:number}|null>(null);
+  const dragStartRef = useRef<{id:string;pointerX:number;pointerY:number;x:number;y:number;width:number;height:number;mode:"move"|"resize"}|null>(null);
   const [search, setSearch] = useState("");
   const [savedState, setSavedState] = useState<"loading" | "saving" | "saved" | "error">("loading");
   const [history, setHistory] = useState<AppProject[]>([]);
@@ -156,9 +158,49 @@ function App() {
   const addElement = (type: ElementKind) => {
     if (!activeProject) return;
     const element = createElement(type);
+    const index = activeProject.elements.length;
+    element.x = 5 + (index % 3) * 3;
+    element.y = 5 + Math.min(index * 13, 75);
     mutateProject(project => ({ ...project, elements: [...project.elements, element] }));
     setSelectedId(element.id);
     setAddMenuOpen(false);
+  };
+
+  const startElementGesture = (event: React.PointerEvent<HTMLDivElement>, element: VisualElement, mode: "move"|"resize") => {
+    if (event.button !== 0) return;
+    event.preventDefault();
+    event.stopPropagation();
+    setSelectedId(element.id);
+    const canvas = event.currentTarget.parentElement;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    dragStartRef.current = { id:element.id, pointerX:event.clientX, pointerY:event.clientY, x:element.x??5, y:element.y??5, width:element.width??90, height:element.height??12, mode };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    event.currentTarget.dataset.canvasWidth = String(rect.width);
+    event.currentTarget.dataset.canvasHeight = String(rect.height);
+    setDragPreview({id:element.id,x:element.x??5,y:element.y??5,width:element.width??90,height:element.height??12});
+  };
+
+  const moveElementGesture = (event: React.PointerEvent<HTMLDivElement>) => {
+    const start = dragStartRef.current;
+    if (!start || start.id !== event.currentTarget.dataset.elementId) return;
+    const width = Number(event.currentTarget.dataset.canvasWidth || 1);
+    const height = Number(event.currentTarget.dataset.canvasHeight || 1);
+    const dx = (event.clientX-start.pointerX)/width*100;
+    const dy = (event.clientY-start.pointerY)/height*100;
+    const next = start.mode === "move"
+      ? {x:Math.max(0,Math.min(100-start.width,start.x+dx)),y:Math.max(0,Math.min(100-start.height,start.y+dy)),width:start.width,height:start.height}
+      : {x:start.x,y:start.y,width:Math.max(8,Math.min(100-start.x,start.width+dx)),height:Math.max(4,Math.min(100-start.y,start.height+dy))};
+    setDragPreview({id:start.id,...next});
+  };
+
+  const finishElementGesture = () => {
+    const start = dragStartRef.current;
+    const next = dragPreview;
+    if (!start || !next || start.id !== next.id) return;
+    mutateProject(project=>({...project,elements:project.elements.map(item=>item.id===start.id?{...item,x:next.x,y:next.y,width:next.width,height:next.height}:item)}));
+    dragStartRef.current = null;
+    setDragPreview(null);
   };
 
   const deleteSelectedElement = () => {
@@ -374,6 +416,12 @@ function App() {
               <button onClick={() => addElement("button")}><MousePointer2 size={18} /><span>دکمه</span></button>
               <button onClick={() => addElement("input")}><FormInput size={18} /><span>کادر ورودی</span></button>
               <button onClick={() => addElement("card")}><Square size={18} /><span>کارت</span></button>
+              <button onClick={() => addElement("heading")}><Heading size={18} /><span>عنوان</span></button>
+              <button onClick={() => addElement("image")}><ImageIcon size={18} /><span>تصویر</span></button>
+              <button onClick={() => addElement("divider")}><Minus size={18} /><span>خط جداکننده</span></button>
+              <button onClick={() => addElement("badge")}><Tag size={18} /><span>برچسب</span></button>
+              <button onClick={() => addElement("checkbox")}><CheckSquare size={18} /><span>چک‌باکس</span></button>
+              <button onClick={() => addElement("spacer")}><Move size={18} /><span>فاصله‌گذار</span></button>
             </div>
             <div className="builder-layers-heading"><span>لایه‌های صفحه</span><small>{activeProject.elements.length.toLocaleString("fa")}</small></div>
             {activeProject.elements.length === 0 ? <div className="builder-muted">هنوز عنصری اضافه نشده است.</div> :
@@ -405,28 +453,16 @@ function App() {
                 <div className="preview-app-title">{activeProject.name || "پروژه جدید"}</div>
                 <div className="preview-content">
                   {activeProject.elements.length === 0 ? <div className="preview-empty"><Plus size={28} /><strong>صفحه شما خالی است</strong><span>از ابزارهای سمت صفحه، عنصر موردنظر را اضافه کن.</span></div> :
-                    activeProject.elements.map(element => <div
-                      key={element.id}
-                      className={`preview-element ${selectedId === element.id ? "is-selected" : ""}`}
-                      style={{
-                        color: element.color,
-                        backgroundColor: element.background,
-                        margin: `${element.margin ?? 7}px 0`,
-                        fontSize: `${element.fontSize}px`,
-                        padding: `${element.padding}px`,
-                        borderRadius: `${element.radius}px`,
-                        textAlign: element.align
-                      }}
-                      onClick={() => setSelectedId(element.id)}
-                      draggable
-                      onDragStart={() => setSelectedId(element.id)}
-                      onDragOver={event => event.preventDefault()}
-                      onDrop={() => onDropElement(element.id)}
-                    >
-                      {element.type === "button" ? <span className="preview-button-label">{element.text}</span> :
-                       element.type === "input" ? <span className="preview-input-label">{element.text}</span> :
-                       element.type === "card" ? <span className="preview-card-label">{element.text}</span> : <span>{element.text}</span>}
-                    </div>)}
+                    activeProject.elements.map(element => {
+                      const g = dragPreview?.id === element.id ? dragPreview : {x:element.x??5,y:element.y??5,width:element.width??90,height:element.height??12};
+                      return <div key={element.id} data-element-id={element.id}
+                        className={`preview-element ${selectedId===element.id?"is-selected":""} preview-${element.type}`}
+                        style={{position:"absolute",left:`${g.x}%`,top:`${g.y}%`,width:`${g.width}%`,minHeight:element.type==="divider"?"2px":`${Math.max(24,g.height/100*430)}px`,color:element.color,backgroundColor:element.background,fontSize:`${element.fontSize}px`,padding:`${element.padding}px`,borderRadius:`${element.radius}px`,textAlign:element.align,touchAction:"none"}}
+                        onPointerDown={event=>startElementGesture(event,element,"move")} onPointerMove={moveElementGesture} onPointerUp={finishElementGesture} onPointerCancel={finishElementGesture}>
+                        {element.type==="button"?<span className="preview-button-label">{element.text}</span>:element.type==="input"?<span className="preview-input-label">{element.text}</span>:element.type==="card"?<span className="preview-card-label">{element.text}</span>:element.type==="heading"?<strong>{element.text}</strong>:element.type==="image"?<span className="preview-image-placeholder">{element.text||"تصویر"}</span>:element.type==="divider"?<span className="preview-divider-line"/>:element.type==="badge"?<span className="preview-badge-label">{element.text}</span>:element.type==="checkbox"?<span>□ {element.text}</span>:element.type==="spacer"?<span className="preview-spacer-label">فاصله</span>:<span>{element.text}</span>}
+                        {selectedId===element.id&&<button className="element-resize-handle" aria-label="تغییر اندازه عنصر" onPointerDown={event=>startElementGesture(event,element,"resize")} onPointerMove={moveElementGesture} onPointerUp={finishElementGesture}><Maximize2 size={12}/></button>}
+                      </div>;
+                    })
                 </div>
               </div>
             </div>
@@ -445,6 +481,8 @@ function App() {
               <div className="property-range"><label htmlFor="element-font-size">اندازه متن <strong>{selectedElement.fontSize}</strong></label><input id="element-font-size" type="range" min="10" max="36" value={selectedElement.fontSize} onChange={event => updateElement(selectedElement.id, { fontSize: Number(event.target.value) })} /></div>
               <div className="property-range"><label htmlFor="element-padding">فاصله داخلی <strong>{selectedElement.padding}</strong></label><input id="element-padding" type="range" min="0" max="32" value={selectedElement.padding} onChange={event => updateElement(selectedElement.id, { padding: Number(event.target.value) })} /></div>
               <div className="property-range"><label htmlFor="element-margin">فاصله بیرونی <strong>{selectedElement.margin ?? 7}</strong></label><input id="element-margin" type="range" min="0" max="40" value={selectedElement.margin ?? 7} onChange={event => updateElement(selectedElement.id, { margin: Number(event.target.value) })} /></div>
+              <div className="property-range"><label htmlFor="element-width">عرض عنصر <strong>{Math.round(selectedElement.width??90)}%</strong></label><input id="element-width" type="range" min="8" max="100" value={selectedElement.width??90} onChange={event=>updateElement(selectedElement.id,{width:Number(event.target.value)})}/></div>
+              <div className="property-range"><label htmlFor="element-height">ارتفاع عنصر <strong>{Math.round(selectedElement.height??12)}%</strong></label><input id="element-height" type="range" min="4" max="70" value={selectedElement.height??12} onChange={event=>updateElement(selectedElement.id,{height:Number(event.target.value)})}/></div>
               <div className="property-range"><label htmlFor="element-radius">گردی گوشه‌ها <strong>{selectedElement.radius}</strong></label><input id="element-radius" type="range" min="0" max="32" value={selectedElement.radius} onChange={event => updateElement(selectedElement.id, { radius: Number(event.target.value) })} /></div>
               <div className="property-align"><span>تراز متن</span><div>
                 <button className={selectedElement.align === "right" ? "active" : ""} onClick={() => updateElement(selectedElement.id, { align: "right" })}>راست</button>
