@@ -21,6 +21,7 @@ function App() {
   const [activeProject, setActiveProject] = useState<AppProject | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [addMenuOpen, setAddMenuOpen] = useState(false);
+  const [previewMode, setPreviewMode] = useState<"mobile" | "tablet" | "desktop">("mobile");
   const [search, setSearch] = useState("");
   const [savedState, setSavedState] = useState<"loading" | "saving" | "saved" | "error">("loading");
   const [history, setHistory] = useState<AppProject[]>([]);
@@ -381,9 +382,16 @@ function App() {
           </aside>
 
           <section className="builder-canvas-wrap">
-            <div className="canvas-toolbar"><span><Smartphone size={17} /> پیش‌نمایش موبایل</span><span>ابعاد نمایشی</span></div>
+            <div className="canvas-toolbar">
+              <span><Smartphone size={17} /> پیش‌نمایش زنده</span>
+              <div className="preview-mode-switch" role="group" aria-label="اندازه پیش‌نمایش">
+                <button className={previewMode === "mobile" ? "active" : ""} onClick={() => setPreviewMode("mobile")}><Smartphone size={14} /> موبایل</button>
+                <button className={previewMode === "tablet" ? "active" : ""} onClick={() => setPreviewMode("tablet")}><Tablet size={14} /> تبلت</button>
+                <button className={previewMode === "desktop" ? "active" : ""} onClick={() => setPreviewMode("desktop")}><Monitor size={14} /> دسکتاپ</button>
+              </div>
+            </div>
             <div className="builder-canvas">
-              <div className="preview-device">
+              <div className={`preview-device preview-device-${previewMode}`}>
                 <div className="preview-status"><span>۹:۴۱</span><span>● ● ●</span></div>
                 <div className="preview-app-title">{activeProject.name || "پروژه جدید"}</div>
                 <div className="preview-content">
