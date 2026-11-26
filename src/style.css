@@ -55,8 +55,18 @@ body { min-height: 100vh; background: #f7f7f8; }
   inset: 0;
   z-index: 6;
   border: 0;
+  padding: 0;
   background: rgba(20, 20, 25, .22);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity .32s ease, visibility .32s ease;
   cursor: default;
+}
+.menu-backdrop.visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 .hamburger-menu {
   position: fixed;
@@ -75,6 +85,24 @@ body { min-height: 100vh; background: #f7f7f8; }
   border-left: 1px solid #e9e9ec;
   box-shadow: -12px 0 35px rgba(20, 20, 30, .12);
   text-align: right;
+  transform: translateX(105%);
+  opacity: .7;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .28s ease, visibility .42s;
+  will-change: transform;
+  transform: translateX(105%);
+  opacity: .7;
+  visibility: hidden;
+  pointer-events: none;
+  transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .28s ease, visibility .42s;
+  will-change: transform;
+}
+.hamburger-menu.open {
+  transform: translateX(0);
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
 }
 .menu-item {
   min-height: 54px;
