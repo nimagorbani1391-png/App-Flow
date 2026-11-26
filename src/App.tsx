@@ -32,6 +32,7 @@ function App() {
   const [toast, setToast] = useState("");
   const [statusTime, setStatusTime] = useState(() => new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" }));
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
   const toastTimerRef = useRef<number | null>(null);
 
   const refreshProjects = useCallback(async () => {
@@ -202,6 +203,19 @@ function App() {
     mutateProject(project=>({...project,elements:project.elements.map(item=>item.id===start.id?{...item,x:next.x,y:next.y,width:next.width,height:next.height}:item)}));
     dragStartRef.current = null;
     setDragPreview(null);
+  };
+
+  const chooseImage = (file?: File) => {
+    if (!file || !selectedElement || selectedElement.type !== "image") return;
+    if (!file.type.startsWith("image/")) { showToast("لطفاً یک فایل تصویری انتخاب کن."); return; }
+    if (file.size > 8 * 1024 * 1024) { showToast("حجم تصویر باید کمتر از ۸ مگابایت باشد."); return; }
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (typeof reader.result === "string") updateElement(selectedElement.id, { text: reader.result });
+    };
+    reader.onerror = () => showToast("خواندن تصویر ناموفق بود.");
+    reader.readAsDataURL(file);
+    if (imageInputRef.current) imageInputRef.current.value = "";
   };
 
   const deleteSelectedElement = () => {
@@ -475,7 +489,15 @@ function App() {
               <button onClick={deleteSelectedElement} disabled={!selectedElement} aria-label="حذف عنصر انتخاب‌شده" title="حذف عنصر"><Trash2 size={17} /></button>
             </div>
             {!selectedElement ? <div className="builder-muted properties-empty">برای ویرایش، یک عنصر را از پیش‌نمایش یا فهرست لایه‌ها انتخاب کن.</div> : <>
-              <label className="property-label" htmlFor="selected-element-text">متن عنصر</label>
+              {selectedElement.type === "image" ? <div className="image-picker-control">
+                <label className="property-label">تصویر عنصر</label>
+                {selectedElement.text.startsWith("data:image/") && <img className="image-picker-preview" src={selectedElement.text} alt="پیش‌نمایش تصویر انتخاب‌شده" />}
+                <button type="button" className="settings-action" onClick={() => imageInputRef.current?.click()}><ImageIcon size={17} /> {selectedElement.text.startsWith("data:image/") ? "تغییر تصویر" : "انتخاب تصویر از دستگاه"}</button>
+                <input ref={imageInputRef} type="file" accept="image/*" hidden onChange={event => chooseImage(event.target.files?.[0])} />
+                <small>فرمت‌های تصویری رایج · حداکثر ۸ مگابایت</small>
+              </div> : <label className="property-label" htmlFor="selected-element-text">متن عنصر</label>}
+              {selectedElement.type !== "image" && <>
+              <textarea id="selected-element-text" value={selectedElement.text} onChange={event => updateElement(selectedElement.id, { text: event.target.value })} />
               <textarea id="selected-element-text" value={selectedElement.text} onChange={event => updateElement(selectedElement.id, { text: event.target.value })} />
               <div className="property-field"><label htmlFor="element-color">رنگ متن</label><input id="element-color" type="color" value={selectedElement.color} onChange={event => updateElement(selectedElement.id, { color: event.target.value })} /></div>
               <div className="property-field"><label htmlFor="element-background">رنگ پس‌زمینه</label><input id="element-background" type="color" value={selectedElement.background} onChange={event => updateElement(selectedElement.id, { background: event.target.value })} /></div>
@@ -490,6 +512,7 @@ function App() {
                 <button className={selectedElement.align === "center" ? "active" : ""} onClick={() => updateElement(selectedElement.id, { align: "center" })}>وسط</button>
                 <button className={selectedElement.align === "left" ? "active" : ""} onClick={() => updateElement(selectedElement.id, { align: "left" })}>چپ</button>
               </div></div>
+              </>}
               <button className="property-delete-button" onClick={deleteSelectedElement}><Trash2 size={16} /> حذف این عنصر</button>
             </>}
           </aside>
