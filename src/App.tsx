@@ -27,11 +27,16 @@ function App() {
             <span className="create-icon"><Plus size={23} strokeWidth={2.2} /></span>
             <div className="create-copy"><strong>ساخت پروژه جدید</strong><span>یک پروژه تازه ایجاد کن</span></div>
           </div>
-          <div className="empty-state">
-            <span className="empty-icon"><FolderOpen size={31} strokeWidth={1.6} /></span>
-            <strong>هنوز پروژه‌ای نداری</strong>
-            <span>با ساخت اولین پروژه، فضای کارت اینجا نمایش داده می‌شود.</span>
-          </div>
+          <section className="projects-list" aria-label="لیست پروژه‌ها">
+            <div className="projects-list-heading">
+              <div className="projects-list-title"><FolderKanban size={19} /><h3>لیست پروژه‌ها</h3></div>
+              <span className="projects-list-total">۰ پروژه</span>
+            </div>
+            <div className="projects-list-empty">
+              <FolderOpen size={25} strokeWidth={1.7} />
+              <span>هنوز پروژه‌ای ایجاد نشده است.</span>
+            </div>
+          </section>
         </section>
       </div>
     </main>
