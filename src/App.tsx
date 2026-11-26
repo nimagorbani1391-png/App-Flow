@@ -166,7 +166,7 @@ function App() {
     setAddMenuOpen(false);
   };
 
-  const startElementGesture = (event: React.PointerEvent<HTMLDivElement>, element: VisualElement, mode: "move"|"resize") => {
+  const startElementGesture = (event: React.PointerEvent<HTMLElement>, element: VisualElement, mode: "move"|"resize") => {
     if (event.button !== 0) return;
     event.preventDefault();
     event.stopPropagation();
