@@ -401,7 +401,8 @@ function App() {
                       className={`preview-element ${selectedId === element.id ? "is-selected" : ""}`}
                       style={{
                         color: element.color,
-                        backgroundColor: element.type === "text" ? "transparent" : element.background,
+                        backgroundColor: element.background,
+                        margin: `${element.margin ?? 7}px 0`,
                         fontSize: `${element.fontSize}px`,
                         padding: `${element.padding}px`,
                         borderRadius: `${element.radius}px`,
@@ -434,6 +435,7 @@ function App() {
               <div className="property-field"><label htmlFor="element-background">رنگ پس‌زمینه</label><input id="element-background" type="color" value={selectedElement.background} onChange={event => updateElement(selectedElement.id, { background: event.target.value })} /></div>
               <div className="property-range"><label htmlFor="element-font-size">اندازه متن <strong>{selectedElement.fontSize}</strong></label><input id="element-font-size" type="range" min="10" max="36" value={selectedElement.fontSize} onChange={event => updateElement(selectedElement.id, { fontSize: Number(event.target.value) })} /></div>
               <div className="property-range"><label htmlFor="element-padding">فاصله داخلی <strong>{selectedElement.padding}</strong></label><input id="element-padding" type="range" min="0" max="32" value={selectedElement.padding} onChange={event => updateElement(selectedElement.id, { padding: Number(event.target.value) })} /></div>
+              <div className="property-range"><label htmlFor="element-margin">فاصله بیرونی <strong>{selectedElement.margin ?? 7}</strong></label><input id="element-margin" type="range" min="0" max="40" value={selectedElement.margin ?? 7} onChange={event => updateElement(selectedElement.id, { margin: Number(event.target.value) })} /></div>
               <div className="property-range"><label htmlFor="element-radius">گردی گوشه‌ها <strong>{selectedElement.radius}</strong></label><input id="element-radius" type="range" min="0" max="32" value={selectedElement.radius} onChange={event => updateElement(selectedElement.id, { radius: Number(event.target.value) })} /></div>
               <div className="property-align"><span>تراز متن</span><div>
                 <button className={selectedElement.align === "right" ? "active" : ""} onClick={() => updateElement(selectedElement.id, { align: "right" })}>راست</button>
