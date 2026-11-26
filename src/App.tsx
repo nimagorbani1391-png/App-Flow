@@ -462,7 +462,7 @@ function App() {
                         {element.type==="button"?<span className="preview-button-label">{element.text}</span>:element.type==="input"?<span className="preview-input-label">{element.text}</span>:element.type==="card"?<span className="preview-card-label">{element.text}</span>:element.type==="heading"?<strong>{element.text}</strong>:element.type==="image"?<span className="preview-image-placeholder">{element.text||"تصویر"}</span>:element.type==="divider"?<span className="preview-divider-line"/>:element.type==="badge"?<span className="preview-badge-label">{element.text}</span>:element.type==="checkbox"?<span>□ {element.text}</span>:element.type==="spacer"?<span className="preview-spacer-label">فاصله</span>:<span>{element.text}</span>}
                         {selectedId===element.id&&<button className="element-resize-handle" aria-label="تغییر اندازه عنصر" onPointerDown={event=>startElementGesture(event,element,"resize")} onPointerMove={moveElementGesture} onPointerUp={finishElementGesture}><Maximize2 size={12}/></button>}
                       </div>;
-                    })
+                    })}
                 </div>
               </div>
             </div>
