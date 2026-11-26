@@ -56,7 +56,7 @@ function isElement(value: unknown): value is VisualElement {
   if (!value || typeof value !== "object") return false;
   const item = value as Partial<VisualElement>;
   return typeof item.id === "string"
-    && ["text", "button", "input", "card"].includes(item.type ?? "")
+    && ["text", "button", "input", "card", "heading", "image", "divider", "badge", "checkbox", "spacer"].includes(item.type ?? "")
     && typeof item.text === "string"
     && typeof item.color === "string"
     && typeof item.background === "string"
