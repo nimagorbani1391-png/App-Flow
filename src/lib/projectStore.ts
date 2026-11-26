@@ -243,7 +243,13 @@ export function createElement(type: ElementKind): VisualElement {
     text: "متن جدید",
     button: "دکمه جدید",
     input: "متن ورودی",
-    card: "عنوان کارت"
+    card: "عنوان کارت",
+    heading: "عنوان اصلی",
+    image: "نشانی تصویر",
+    divider: "",
+    badge: "برچسب",
+    checkbox: "گزینه جدید",
+    spacer: ""
   };
   return {
     id: typeof crypto !== "undefined" && "randomUUID" in crypto
