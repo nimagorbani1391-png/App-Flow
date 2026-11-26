@@ -37,6 +37,7 @@ body { min-height: 100vh; background: #f7f7f8; }
   right: max(22px, calc((100% - 1080px) / 2));
   top: 50%;
   transform: translateY(-50%);
+  z-index: 9;
   width: 46px;
   height: 46px;
   display: grid;
@@ -54,37 +55,39 @@ body { min-height: 100vh; background: #f7f7f8; }
   inset: 0;
   z-index: 6;
   border: 0;
-  background: transparent;
+  background: rgba(20, 20, 25, .22);
   cursor: default;
 }
 .hamburger-menu {
-  position: absolute;
-  top: calc(100% - 5px);
-  right: max(22px, calc((100% - 1080px) / 2));
-  z-index: 7;
-  width: 220px;
-  padding: 8px;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 8;
+  width: 50vw;
+  min-width: 160px;
+  max-width: 560px;
+  padding: 92px 20px 24px;
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 9px;
   background: #fff;
-  border: 1px solid #e9e9ec;
-  border-radius: 14px;
-  box-shadow: 0 12px 35px rgba(20, 20, 30, .12);
+  border-left: 1px solid #e9e9ec;
+  box-shadow: -12px 0 35px rgba(20, 20, 30, .12);
   text-align: right;
 }
 .menu-item {
-  min-height: 47px;
-  padding: 0 13px;
+  min-height: 54px;
+  padding: 0 16px;
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 13px;
   border: 0;
-  border-radius: 9px;
+  border-radius: 10px;
   background: transparent;
   color: #66666f;
   font: inherit;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   text-align: right;
   cursor: pointer;
@@ -146,7 +149,8 @@ body { min-height: 100vh; background: #f7f7f8; }
   .brand-header { min-height: 100px; padding: 15px 17px; }
   .brand-title { font-size: 36px; letter-spacing: -1px; }
   .menu-toggle { right: 14px; width: 42px; height: 42px; }
-  .hamburger-menu { right: 14px; width: min(220px, calc(100vw - 28px)); }
+  .hamburger-menu { width: 50vw; min-width: 160px; padding: 86px 14px 20px; }
+  .menu-item { min-height: 50px; padding: 0 12px; font-size: 14px; }
   .app-layout { width: calc(100% - 28px); margin: 16px auto; }
   .workspace { min-height: 500px; padding: 19px 15px; border-radius: 13px; }
   .page-heading { margin-bottom: 19px; }
