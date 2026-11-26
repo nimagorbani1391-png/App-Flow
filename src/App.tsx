@@ -7,7 +7,7 @@ import {
 } from "lucide-react";
 import {
   AppProject, ElementKind, VisualElement, createElement, createProject,
-  deleteProject as removeStoredProject, isValidProject, listProjects,
+  deleteProject as removeStoredProject, listProjects,
   parseProjectBackup, saveProject as persistProject
 } from "./lib/projectStore";
 
@@ -87,6 +87,25 @@ function App() {
     setToast(message);
     if (toastTimerRef.current !== null) window.clearTimeout(toastTimerRef.current);
     toastTimerRef.current = window.setTimeout(() => setToast(""), 3000);
+  };
+
+  const closeEditorSafely = async () => {
+    if (!activeProject) {
+      setEditorOpen(false);
+      return;
+    }
+    try {
+      const latest = { ...activeProject, updatedAt: new Date().toISOString() };
+      await persistProject(latest);
+      setProjects(current => [latest, ...current.filter(project => project.id !== latest.id)]
+        .sort((a, b) => b.updatedAt.localeCompare(a.updatedAt)));
+      setActiveProject(null);
+      setSelectedId(null);
+      setEditorOpen(false);
+    } catch {
+      setSavedState("error");
+      showToast("ذخیره پروژه ناموفق بود؛ از صفحه خارج نشو تا اطلاعات از دست نرود.");
+    }
   };
 
   const beginNewProject = () => {
@@ -321,7 +340,7 @@ function App() {
         </div>
       </> : activeProject && <section className="builder-shell">
         <header className="builder-header">
-          <button className="builder-back" onClick={() => { setEditorOpen(false); setActiveProject(null); setSelectedId(null); }} aria-label="بازگشت به پروژه‌ها"><ArrowLeft size={21} /></button>
+          <button className="builder-back" onClick={() => void closeEditorSafely()} aria-label="بازگشت به پروژه‌ها"><ArrowLeft size={21} /></button>
           <div className="builder-name-wrap">
             <input value={activeProject.name} aria-label="نام پروژه" onChange={event => mutateProject(project => ({ ...project, name: event.target.value }))} />
             <span>{activeProject.elements.length.toLocaleString("fa")} عنصر</span>
