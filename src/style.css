@@ -1,9 +1,11 @@
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
 
 :root{font-family:Vazirmatn,Tahoma,sans-serif;color:#292833;background:#fff;font-synthesis:none;text-rendering:optimizeLegibility;--accent:#FF0000;--accent-soft:#fff0f0}
 *{box-sizing:border-box}
 body{margin:0;min-width:320px;min-height:100vh}
 .app-shell{min-height:100vh;background:#fff}
+.brand-header{height:78px;display:flex;align-items:center;justify-content:center;background:#fff}
+.brand-title{margin:0;color:#24242a;font-size:27px;font-weight:800;letter-spacing:-1.2px;line-height:1}
 .top-navigation{height:76px;width:100%;display:grid;grid-template-columns:1fr 1fr;align-items:stretch;background:#fff;border-bottom:1px solid #eceaf0;padding:0 22px}
 .nav-item{position:relative;display:flex;align-items:center;justify-content:center;color:#55515d;font-size:17px;font-weight:600;white-space:nowrap}
 .nav-item.active{color:var(--accent)}
@@ -13,6 +15,8 @@ body{margin:0;min-width:320px;min-height:100vh}
 .create-icon{width:44px;height:44px;display:grid;place-items:center;flex:0 0 44px;border-radius:12px;background:var(--accent-soft);color:var(--accent)}
 .create-card strong{font-size:15px;font-weight:600;color:#292833}
 @media(max-width:600px){
+ .brand-header{height:70px}
+ .brand-title{font-size:25px}
  .top-navigation{height:66px;padding:0 10px}
  .nav-item{font-size:15px}
  .nav-item.active:after{width:44px;left:calc(50% - 22px)}
