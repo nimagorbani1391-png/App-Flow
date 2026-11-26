@@ -6,22 +6,26 @@ body{margin:0;min-width:320px;min-height:100vh}
 .app-shell{min-height:100vh;background:#fff}
 .brand-header{height:78px;display:flex;align-items:center;justify-content:center;background:#fff}
 .brand-title{margin:0;color:#24242a;font-size:27px;font-weight:800;letter-spacing:-1.2px;line-height:1}
-.top-navigation{height:76px;width:100%;display:grid;grid-template-columns:1fr 1fr;align-items:stretch;background:#fff;border-bottom:1px solid #eceaf0;padding:0 22px}
-.nav-item{position:relative;display:flex;align-items:center;justify-content:center;color:#55515d;font-size:17px;font-weight:600;white-space:nowrap}
-.nav-item.active{color:var(--accent)}
-.nav-item.active:after{content:"";position:absolute;bottom:0;left:calc(50% - 25px);width:50px;height:3px;border-radius:4px 4px 0 0;background:var(--accent)}
-.workspace{width:min(100% - 40px,760px);margin:0 auto;padding-top:30px}
-.create-card{min-height:94px;display:flex;align-items:center;gap:15px;padding:18px 20px;background:#fff;border:1px solid #e8e7ed;border-radius:15px;box-shadow:0 3px 14px rgba(34,30,48,.035)}
-.create-icon{width:44px;height:44px;display:grid;place-items:center;flex:0 0 44px;border-radius:12px;background:var(--accent-soft);color:var(--accent)}
-.create-card strong{font-size:15px;font-weight:600;color:#292833}
+.top-navigation{width:min(100% - 40px,760px);min-height:76px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:8px;padding:8px;background:#f7f7f8;border:1px solid #ededf0;border-radius:19px}
+.nav-item{min-height:58px;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:13px;color:#686873;font-size:16px;font-weight:600;white-space:nowrap;transition:background .2s ease,color .2s ease}
+.nav-item svg{color:#9696a0}
+.nav-item.active{color:#fff;background:var(--accent);box-shadow:0 5px 13px rgba(255,0,0,.18)}
+.nav-item.active svg{color:#fff}
+.workspace{width:min(100% - 40px,760px);margin:0 auto;padding-top:25px}
+.create-card{position:relative;min-height:104px;display:flex;align-items:center;gap:17px;padding:20px 22px;background:linear-gradient(110deg,#fff 0%,#fffafa 100%);border:1px solid #f0dada;border-radius:19px;box-shadow:0 7px 22px rgba(45,28,28,.055);overflow:hidden}
+.create-card:before{content:"";position:absolute;right:0;top:17px;bottom:17px;width:4px;border-radius:4px 0 0 4px;background:var(--accent)}
+.create-icon{width:53px;height:53px;display:grid;place-items:center;flex:0 0 53px;border-radius:16px;background:var(--accent);color:#fff;box-shadow:0 5px 12px rgba(255,0,0,.2)}
+.create-card strong{flex:1;font-size:15px;font-weight:700;color:#292833}
+.create-arrow{width:34px;height:34px;display:grid;place-items:center;border-radius:11px;background:#fff0f0;color:var(--accent)}
 @media(max-width:600px){
  .brand-header{height:70px}
  .brand-title{font-size:25px}
- .top-navigation{height:66px;padding:0 10px}
- .nav-item{font-size:15px}
- .nav-item.active:after{width:44px;left:calc(50% - 22px)}
- .workspace{width:calc(100% - 32px);padding-top:22px}
- .create-card{min-height:82px;padding:15px 14px;gap:12px;border-radius:13px}
- .create-icon{width:40px;height:40px;flex-basis:40px;border-radius:11px}
+ .top-navigation{width:calc(100% - 32px);min-height:68px;padding:6px;gap:6px;border-radius:16px}
+ .nav-item{min-height:54px;gap:7px;border-radius:12px;font-size:14px}
+ .nav-item svg{width:17px;height:17px}
+ .workspace{width:calc(100% - 32px);padding-top:18px}
+ .create-card{min-height:91px;padding:16px 16px;gap:13px;border-radius:16px}
+ .create-icon{width:47px;height:47px;flex-basis:47px;border-radius:14px}
  .create-card strong{font-size:14px}
+ .create-arrow{width:31px;height:31px;border-radius:10px}
 }
