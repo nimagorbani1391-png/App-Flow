@@ -13,19 +13,23 @@ html, body, #root { min-width: 320px; min-height: 100%; margin: 0; }
 body { min-height: 100vh; background: #f7f7f8; }
 .app-shell { min-height: 100vh; }
 .brand-header {
-  height: 76px;
+  min-height: 112px;
   display: flex;
   align-items: center;
-  padding: 0 max(24px, calc((100% - 1080px) / 2));
+  justify-content: center;
+  padding: 18px 24px;
   background: #fff;
   border-bottom: 1px solid #eaeaec;
+  text-align: center;
 }
-.brand-lockup { display: flex; align-items: center; gap: 10px; }
-.brand-mark {
-  width: 36px; height: 36px; display: grid; place-items: center;
-  color: #fff; background: var(--accent); border-radius: 11px;
+.brand-title {
+  margin: 0;
+  font-size: 42px;
+  line-height: 1.35;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: #222228;
 }
-.brand-title { margin: 0; font-size: 23px; line-height: 1; font-weight: 800; color: #222228; }
 .app-layout {
   width: min(1080px, calc(100% - 48px));
   margin: 28px auto;
@@ -97,9 +101,8 @@ body { min-height: 100vh; background: #f7f7f8; }
 .empty-state > span:last-child { color: #9999a1; font-size: 11px; }
 
 @media (max-width: 680px) {
-  .brand-header { height: 65px; padding: 0 17px; }
-  .brand-mark { width: 33px; height: 33px; }
-  .brand-title { font-size: 21px; }
+  .brand-header { min-height: 100px; padding: 15px 17px; }
+  .brand-title { font-size: 36px; letter-spacing: -1px; }
   .app-layout {
     width: calc(100% - 28px); margin: 16px auto;
     grid-template-columns: 1fr; gap: 12px;
