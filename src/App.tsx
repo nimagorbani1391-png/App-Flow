@@ -171,17 +171,18 @@ function App() {
     event.preventDefault();
     event.stopPropagation();
     setSelectedId(element.id);
-    const canvas = event.currentTarget.parentElement;
-    if (!canvas) return;
+    const canvas = event.currentTarget.closest('.preview-content') as HTMLElement | null;
+    const elementNode = event.currentTarget.closest('[data-element-id]') as HTMLElement | null;
+    if (!canvas || !elementNode) return;
     const rect = canvas.getBoundingClientRect();
     dragStartRef.current = { id:element.id, pointerX:event.clientX, pointerY:event.clientY, x:element.x??5, y:element.y??5, width:element.width??90, height:element.height??12, mode };
     event.currentTarget.setPointerCapture(event.pointerId);
-    event.currentTarget.dataset.canvasWidth = String(rect.width);
-    event.currentTarget.dataset.canvasHeight = String(rect.height);
+    elementNode.dataset.canvasWidth = String(rect.width);
+    elementNode.dataset.canvasHeight = String(rect.height);
     setDragPreview({id:element.id,x:element.x??5,y:element.y??5,width:element.width??90,height:element.height??12});
   };
 
-  const moveElementGesture = (event: React.PointerEvent<HTMLDivElement>) => {
+  const moveElementGesture = (event: React.PointerEvent<HTMLElement>) => {
     const start = dragStartRef.current;
     if (!start || start.id !== event.currentTarget.dataset.elementId) return;
     const width = Number(event.currentTarget.dataset.canvasWidth || 1);
