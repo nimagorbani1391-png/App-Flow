@@ -22,7 +22,6 @@ function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [addMenuOpen, setAddMenuOpen] = useState(false);
   const [previewMode, setPreviewMode] = useState<"mobile" | "tablet" | "desktop">("mobile");
-  const [previewMode, setPreviewMode] = useState<"mobile" | "tablet" | "desktop">("mobile");
   const [search, setSearch] = useState("");
   const [savedState, setSavedState] = useState<"loading" | "saving" | "saved" | "error">("loading");
   const [history, setHistory] = useState<AppProject[]>([]);
