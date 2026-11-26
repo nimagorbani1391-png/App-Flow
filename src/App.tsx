@@ -22,6 +22,7 @@ function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [addMenuOpen, setAddMenuOpen] = useState(false);
   const [previewMode, setPreviewMode] = useState<"mobile" | "tablet" | "desktop">("mobile");
+  const [previewMode, setPreviewMode] = useState<"mobile" | "tablet" | "desktop">("mobile");
   const [search, setSearch] = useState("");
   const [savedState, setSavedState] = useState<"loading" | "saving" | "saved" | "error">("loading");
   const [history, setHistory] = useState<AppProject[]>([]);
@@ -65,6 +66,8 @@ function App() {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (!editorOpen || !(event.ctrlKey || event.metaKey)) return;
+      const target = event.target as HTMLElement | null;
+      if (target && (target.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName))) return;
       if (event.key.toLowerCase() === "z" && !event.shiftKey) {
         event.preventDefault();
         undo();
