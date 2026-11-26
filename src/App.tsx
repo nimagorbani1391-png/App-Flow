@@ -7,29 +7,15 @@ function App() {
   return (
     <main className="app-shell" dir="rtl">
       <header className="brand-header">
-        <button
-          className="menu-toggle"
-          type="button"
-          aria-label={menuOpen ? "بستن منو" : "باز کردن منو"}
-          aria-expanded={menuOpen}
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        <button className="menu-toggle" type="button" aria-label={menuOpen ? "بستن منو" : "باز کردن منو"} aria-expanded={menuOpen} onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? <X size={23} /> : <Menu size={24} />}
         </button>
         <h1 className="brand-title">اپ فلو</h1>
-        {menuOpen && (
-          <>
-            <button className="menu-backdrop" aria-label="بستن منو" onClick={() => setMenuOpen(false)} />
-            <nav className="hamburger-menu" aria-label="منوی اصلی">
-              <button className="menu-item active" onClick={() => setMenuOpen(false)}>
-                <FolderKanban size={19} /><span>پروژه‌ها</span>
-              </button>
-              <button className="menu-item" onClick={() => setMenuOpen(false)}>
-                <Settings2 size={19} /><span>تنظیمات</span>
-              </button>
-            </nav>
-          </>
-        )}
+        <button className={`menu-backdrop ${menuOpen ? "visible" : ""}`} aria-label="بستن منو" aria-hidden={!menuOpen} tabIndex={menuOpen ? 0 : -1} onClick={() => setMenuOpen(false)} />
+        <nav className={`hamburger-menu ${menuOpen ? "open" : ""}`} aria-label="منوی اصلی" aria-hidden={!menuOpen}>
+          <button className="menu-item active" tabIndex={menuOpen ? 0 : -1} onClick={() => setMenuOpen(false)}><FolderKanban size={19} /><span>پروژه‌ها</span></button>
+          <button className="menu-item" tabIndex={menuOpen ? 0 : -1} onClick={() => setMenuOpen(false)}><Settings2 size={19} /><span>تنظیمات</span></button>
+        </nav>
       </header>
       <div className="app-layout">
         <section className="workspace">
