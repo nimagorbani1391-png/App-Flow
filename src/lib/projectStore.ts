@@ -161,7 +161,11 @@ export async function listProjects(): Promise<AppProject[]> {
       if (!existing || project.updatedAt > existing.updatedAt) merged.set(project.id, project);
     }
     const result = sortProjects([...merged.values()]);
-    if (result.length !== records.length) {
+    const needsSync = result.some(project => {
+      const stored = records.find(record => record.id === project.id);
+      return !stored || stored.updatedAt !== project.updatedAt;
+    });
+    if (needsSync) {
       const writeDb = await openDatabase();
       const transaction = writeDb.transaction(STORE_NAME, "readwrite");
       for (const project of result) transaction.objectStore(STORE_NAME).put(project);
