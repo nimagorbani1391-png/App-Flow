@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Plus, FolderKanban, Settings2, FolderOpen, Menu, X } from "lucide-react";
+import { Plus, FolderKanban, Settings2, FolderOpen, Menu, X, GraduationCap } from "lucide-react";
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -15,6 +15,7 @@ function App() {
         <nav className={`hamburger-menu ${menuOpen ? "open" : ""}`} aria-label="منوی اصلی" aria-hidden={!menuOpen}>
           <button className="menu-item active" tabIndex={menuOpen ? 0 : -1} onClick={() => setMenuOpen(false)}><FolderKanban size={19} /><span>پروژه‌ها</span></button>
           <button className="menu-item" tabIndex={menuOpen ? 0 : -1} onClick={() => setMenuOpen(false)}><Settings2 size={19} /><span>تنظیمات</span></button>
+          <a className="menu-item" href="https://rubika.ir/App_Flow" target="_blank" rel="noopener noreferrer" tabIndex={menuOpen ? 0 : -1}><GraduationCap size={19} /><span>آموزش‌ها</span></a>
         </nav>
       </header>
       <div className="app-layout">
