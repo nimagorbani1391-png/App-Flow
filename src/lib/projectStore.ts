@@ -1,4 +1,4 @@
-export type ElementKind = "text" | "button" | "input" | "card";
+export type ElementKind = "text" | "button" | "input" | "card" | "heading" | "image" | "divider" | "badge" | "checkbox" | "spacer";
 export type TextAlignment = "right" | "center" | "left";
 
 export type VisualElement = {
@@ -12,6 +12,10 @@ export type VisualElement = {
   margin: number;
   radius: number;
   align: TextAlignment;
+  x?: number;
+  y?: number;
+  width?: number;
+  height?: number;
 };
 
 export type AppProject = {
@@ -253,7 +257,11 @@ export function createElement(type: ElementKind): VisualElement {
     padding: 12,
     margin: 7,
     radius: 10,
-    align: "right"
+    align: "right",
+    x: 5,
+    y: 5 + Math.min(20, Math.random() * 4),
+    width: type === "divider" ? 90 : type === "badge" ? 36 : 90,
+    height: type === "heading" ? 12 : type === "divider" ? 1 : type === "spacer" ? 8 : type === "image" ? 32 : type === "checkbox" ? 10 : 12
   };
 }
 
