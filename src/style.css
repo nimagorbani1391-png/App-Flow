@@ -1,14 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap');
+@import url('https://cdn.jsdelivr.net/npm/vazir-font@30.1.0/dist/font-face.css');
 
 :root {
-  font-family: Vazirmatn, Tahoma, sans-serif;
+  font-family: Vazir, Tahoma, sans-serif;
   color: #24242a;
   background: #f7f7f8;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --accent: #ff0000;
 }
-* { box-sizing: border-box; }
+* { box-sizing: border-box; font-family: inherit; }
 html, body, #root { min-width: 320px; min-height: 100%; margin: 0; }
 body { min-height: 100vh; background: #f7f7f8; }
 .app-shell { min-height: 100vh; }
@@ -229,3 +229,18 @@ button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{
 /* Preview viewport controls */
 .preview-mode-switch{display:flex;align-items:center;gap:3px;padding:3px;border:1px solid #dedfe6;border-radius:8px;background:#fff}.preview-mode-switch button{min-height:28px;padding:0 7px;display:flex;align-items:center;gap:4px;border:0;border-radius:6px;background:transparent;color:#777782;font-size:9px;cursor:pointer}.preview-mode-switch button.active{background:#fff0f0;color:#d90000;font-weight:800}.preview-device.tablet{width:min(100%,760px);height:min(72vh,850px);min-height:620px;border-width:7px;border-radius:18px}.preview-device.desktop{width:100%;height:min(72vh,850px);min-height:620px;border:1px solid #bfc1ca;border-radius:12px}.preview-device.tablet .preview-content,.preview-device.desktop .preview-content{padding:18px 22px}.preview-device.tablet .preview-empty,.preview-device.desktop .preview-empty{min-height:450px}
 @media(max-width:740px){.preview-mode-switch button{padding:0 5px;font-size:8px}.preview-mode-switch button svg{width:12px;height:12px}.preview-device.tablet{min-height:570px;height:570px}.preview-device.desktop{min-height:570px;height:570px}.preview-device.tablet .preview-content,.preview-device.desktop .preview-content{padding:12px}.preview-device.tablet .preview-empty,.preview-device.desktop .preview-empty{min-height:450px}}
+
+/* App Flow — expanded creator and freeform canvas */
+.create-card{min-height:132px;padding:24px 26px;gap:20px;border-radius:18px}.create-card .create-icon{width:62px;height:62px}.create-card .create-copy strong{font-size:19px}.create-card .create-copy span{font-size:13px}
+.builder-workspace{grid-template-columns:260px minmax(360px,1fr) 285px;max-width:1700px;gap:14px;padding:16px}
+.builder-add-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.builder-add-grid button{min-height:68px}
+.preview-content{position:relative;min-height:480px;height:calc(100% - 71px);overflow:hidden;padding:0!important}
+.preview-device{display:flex;flex-direction:column}.preview-device-tablet{width:min(100%,650px);border-radius:20px}.preview-device-desktop{width:min(100%,1000px);border:1px solid #c8c8d0;border-radius:12px}
+.preview-element{display:flex;align-items:center;justify-content:center;overflow:visible;cursor:grab;user-select:none;touch-action:none;border:1px solid transparent;box-sizing:border-box;z-index:1}
+.preview-element:active{cursor:grabbing}.preview-element.is-selected{outline:1px dashed #f00;outline-offset:2px;z-index:3}
+.element-resize-handle{position:absolute!important;left:-9px!important;bottom:-9px!important;width:23px!important;height:23px!important;display:grid!important;place-items:center!important;padding:0!important;border:2px solid #fff!important;border-radius:7px!important;background:#f00!important;color:#fff!important;box-shadow:0 1px 5px #0003!important;cursor:nwse-resize!important;touch-action:none!important;z-index:8}
+.preview-image-placeholder{width:100%;height:100%;min-height:70px;display:grid;place-items:center;border:1px dashed #b9bac4;border-radius:8px;background:linear-gradient(135deg,#f1f1f5,#fafafd);color:#85858e;font-size:11px}
+.preview-divider-line{width:100%;height:2px;background:currentColor}.preview-badge-label{display:inline-flex;padding:4px 10px;border-radius:99px;background:#ffe8e8;color:#c00;font-size:11px}.preview-spacer-label{opacity:.35;font-size:9px}
+.preview-heading{font-weight:800}.preview-checkbox{justify-content:flex-start}
+@media(max-width:900px){.builder-workspace{grid-template-columns:210px minmax(280px,1fr);}.builder-properties{grid-column:1/-1;min-height:180px}}
+@media(max-width:600px){.create-card{min-height:118px;padding:19px}.create-card .create-icon{width:54px;height:54px}.create-card .create-copy strong{font-size:16px}.builder-workspace{display:flex;flex-direction:column;padding:9px;gap:9px}.builder-layers{order:1;max-height:300px}.builder-canvas-wrap{order:2;min-height:620px}.builder-properties{order:3;min-height:160px}.builder-canvas{min-height:540px;padding:6px}.preview-device{min-height:540px;height:540px}.preview-content{min-height:470px}.preview-device-tablet{width:100%;min-height:540px}.preview-device-desktop{width:100%;min-height:540px}}
