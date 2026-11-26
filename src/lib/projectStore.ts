@@ -156,28 +156,21 @@ export async function listProjects(): Promise<AppProject[]> {
     const database = await openDatabase();
     const records = await requestResult(database.transaction(STORE_NAME, "readonly").objectStore(STORE_NAME).getAll()) as AppProject[];
     database.close();
-    const merged = new Map<string, AppProject>();
-    for (const project of records) if (isValidProject(project)) merged.set(project.id, project);
-    for (const project of readFallback()) {
-      const existing = merged.get(project.id);
-      if (!existing || project.updatedAt > existing.updatedAt) merged.set(project.id, project);
-    }
-    const result = sortProjects([...merged.values()]);
-    const needsSync = result.some(project => {
-      const stored = records.find(record => record.id === project.id);
-      return !stored || stored.updatedAt !== project.updatedAt;
+    const validRecords = records.filter(isValidProject);
+    if (validRecords.length > 0) return sortProjects(validRecords);
+
+    // Import older localStorage projects once, only when IndexedDB is empty.
+    const fallbackProjects = readFallback();
+    if (fallbackProjects.length === 0) return [];
+    const writeDb = await openDatabase();
+    const transaction = writeDb.transaction(STORE_NAME, "readwrite");
+    for (const project of fallbackProjects) transaction.objectStore(STORE_NAME).put(project);
+    await new Promise<void>((resolve, reject) => {
+      transaction.oncomplete = () => resolve();
+      transaction.onerror = () => reject(transaction.error ?? new Error("بازیابی اطلاعات ناموفق بود."));
     });
-    if (needsSync) {
-      const writeDb = await openDatabase();
-      const transaction = writeDb.transaction(STORE_NAME, "readwrite");
-      for (const project of result) transaction.objectStore(STORE_NAME).put(project);
-      await new Promise<void>((resolve, reject) => {
-        transaction.oncomplete = () => resolve();
-        transaction.onerror = () => reject(transaction.error ?? new Error("بازیابی اطلاعات ناموفق بود."));
-      });
-      writeDb.close();
-    }
-    return result;
+    writeDb.close();
+    return sortProjects(fallbackProjects);
   } catch {
     return sortProjects(readFallback());
   }
