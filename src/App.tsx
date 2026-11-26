@@ -1,16 +1,37 @@
-import { Plus, FolderKanban, Settings2, FolderOpen } from "lucide-react";
+import { useState } from "react";
+import { Plus, FolderKanban, Settings2, FolderOpen, Menu, X } from "lucide-react";
 
 function App() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <main className="app-shell" dir="rtl">
       <header className="brand-header">
+        <button
+          className="menu-toggle"
+          type="button"
+          aria-label={menuOpen ? "بستن منو" : "باز کردن منو"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <X size={23} /> : <Menu size={24} />}
+        </button>
         <h1 className="brand-title">اپ فلو</h1>
+        {menuOpen && (
+          <>
+            <button className="menu-backdrop" aria-label="بستن منو" onClick={() => setMenuOpen(false)} />
+            <nav className="hamburger-menu" aria-label="منوی اصلی">
+              <button className="menu-item active" onClick={() => setMenuOpen(false)}>
+                <FolderKanban size={19} /><span>پروژه‌ها</span>
+              </button>
+              <button className="menu-item" onClick={() => setMenuOpen(false)}>
+                <Settings2 size={19} /><span>تنظیمات</span>
+              </button>
+            </nav>
+          </>
+        )}
       </header>
       <div className="app-layout">
-        <nav className="side-navigation" aria-label="ناوبری اصلی">
-          <div className="nav-item active"><FolderKanban size={19} /><span>پروژه‌ها</span></div>
-          <div className="nav-item"><Settings2 size={19} /><span>تنظیمات</span></div>
-        </nav>
         <section className="workspace">
           <div className="page-heading">
             <div><h2>پروژه‌های من</h2><p>پروژه‌هایت را اینجا مدیریت کن.</p></div>
