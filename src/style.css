@@ -154,18 +154,37 @@ body { min-height: 100vh; background: #f7f7f8; }
 .create-copy { display: flex; flex-direction: column; gap: 4px; }
 .create-copy strong { color: #292930; font-size: 13px; font-weight: 700; }
 .create-copy span { color: #92929a; font-size: 11px; }
-.empty-state {
-  min-height: 270px; display: flex; flex-direction: column;
-  align-items: center; justify-content: center; gap: 9px;
-  text-align: center;
+.projects-list {
+  margin-top: 22px;
+  min-height: 270px;
+  overflow: hidden;
+  border: 1px solid #eaeaec;
+  border-radius: 13px;
+  background: #fff;
 }
-.empty-icon {
-  width: 62px; height: 62px; margin-bottom: 4px;
-  display: grid; place-items: center; border-radius: 17px;
-  color: #e00000; background: #fff1f1;
+.projects-list-heading {
+  min-height: 60px;
+  padding: 0 17px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid #eeeeF0;
 }
-.empty-state strong { color: #44444c; font-size: 13px; font-weight: 700; }
-.empty-state > span:last-child { color: #9999a1; font-size: 11px; }
+.projects-list-title { display: flex; align-items: center; gap: 10px; color: #e00000; }
+.projects-list-title h3 { margin: 0; color: #292930; font-size: 14px; font-weight: 700; }
+.projects-list-total { color: #85858e; font-size: 11px; }
+.projects-list-empty {
+  min-height: 208px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #9999a1;
+  font-size: 12px;
+}
+.projects-list-empty svg { color: #c5c5cc; }
 
 @media (max-width: 680px) {
   .brand-header { min-height: 100px; padding: 15px 17px; }
