@@ -91,12 +91,6 @@ body { min-height: 100vh; background: #f7f7f8; }
   pointer-events: none;
   transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .28s ease, visibility .42s;
   will-change: transform;
-  transform: translateX(105%);
-  opacity: .7;
-  visibility: hidden;
-  pointer-events: none;
-  transition: transform .42s cubic-bezier(.22, 1, .36, 1), opacity .28s ease, visibility .42s;
-  will-change: transform;
 }
 .hamburger-menu.open {
   transform: translateX(0);
