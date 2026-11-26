@@ -1,38 +1,44 @@
-import { useEffect, useMemo, useState } from "react";
-import { AlignCenter, AlignLeft, AlignRight, ArrowDown, ArrowUp, Check, ChevronDown, Copy, Download, Eye, FilePlus2, Image, Layers3, Link2, Monitor, MousePointer2, Plus, Redo2, Save, Smartphone, Tablet, Trash2, Type, Undo2, Upload, WandSparkles } from "lucide-react";
+import { FolderKanban, Settings2, Plus, Layers3 } from "lucide-react";
 
-type Kind="heading"|"text"|"button"|"image"|"link"|"section";
-type Block={id:string;kind:Kind;content:string;color:string;background:string;fontSize:number;padding:number;align:"right"|"center"|"left"};
-const starter:Block[]=[
-{id:"welcome",kind:"heading",content:"ایده‌ات را به اپلیکیشن تبدیل کن",color:"#17211d",background:"transparent",fontSize:32,padding:12,align:"center"},
-{id:"sub",kind:"text",content:"بدون نوشتن حتی یک خط کد، اولین صفحه‌ات را بساز.",color:"#66736c",background:"transparent",fontSize:16,padding:10,align:"center"},
-{id:"cta",kind:"button",content:"شروع ساخت",color:"#ffffff",background:"#176b52",fontSize:15,padding:14,align:"center"}
-];
-const labels:Record<Kind,string>={heading:"عنوان",text:"متن",button:"دکمه",image:"تصویر",link:"لینک",section:"بخش"};
-function App(){
- const [blocks,setBlocks]=useState<Block[]>(()=>{try{return JSON.parse(localStorage.getItem("appflow-project")||"null")||starter}catch{return starter}});
- const [selected,setSelected]=useState("welcome");const [device,setDevice]=useState<"desktop"|"tablet"|"mobile">("desktop");const [preview,setPreview]=useState(false);const [project,setProject]=useState("پروژه بدون نام");
- const active=blocks.find(b=>b.id===selected)||blocks[0];
- useEffect(()=>{localStorage.setItem("appflow-project",JSON.stringify(blocks))},[blocks]);
- const update=(patch:Partial<Block>)=>setBlocks(old=>old.map(b=>b.id===selected?{...b,...patch}:b));
- const add=(kind:Kind)=>{const id=crypto.randomUUID();const b:Block={id,kind,content:kind==="heading"?"عنوان جدید":kind==="text"?"متن جدید":kind==="button"?"دکمه جدید":kind==="link"?"مشاهده بیشتر":kind==="section"?"بخش جدید":"https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=900",color:"#26332d",background:kind==="button"?"#176b52":"transparent",fontSize:kind==="heading"?26:16,padding:16,align:"right"};setBlocks(x=>[...x,b]);setSelected(id)};
- const remove=()=>{setBlocks(x=>x.filter(b=>b.id!==selected));setSelected(blocks.find(b=>b.id!==selected)?.id||"")};
- const move=(d:number)=>{const i=blocks.findIndex(b=>b.id===selected),j=i+d;if(j<0||j>=blocks.length)return;const x=[...blocks];[x[i],x[j]]=[x[j],x[i]];setBlocks(x)};
- const exportProject=()=>{const blob=new Blob([JSON.stringify({name:project,blocks},null,2)],{type:"application/json"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="app-flow-project.json";a.click();URL.revokeObjectURL(a.href)};
- const importProject=(f?:File)=>{if(!f)return;const r=new FileReader();r.onload=()=>{try{const data=JSON.parse(String(r.result));if(Array.isArray(data.blocks)){setBlocks(data.blocks);setProject(data.name||"پروژه واردشده")}}catch{alert("فایل پروژه معتبر نیست")}};r.readAsText(f)};
- const content=useMemo(()=>blocks.map(b=>b.content).join(" "),[blocks]);
- return <div className="app-shell">
-  <header className="topbar"><div className="brand"><div className="brandmark">A</div><div><b>APP FLOW</b><small>VISUAL APP BUILDER</small></div></div><div className="project-name"><input value={project} onChange={e=>setProject(e.target.value)} aria-label="نام پروژه"/><span className="saved"><Check size={14}/> ذخیره خودکار</span></div><div className="top-actions"><button className="icon-btn" title="خروجی پروژه" onClick={exportProject}><Download size={17}/></button><label className="icon-btn upload" title="ورود پروژه"><Upload size={17}/><input type="file" accept="application/json" onChange={e=>importProject(e.target.files?.[0])}/></label><button className="preview-btn" onClick={()=>setPreview(!preview)}><Eye size={16}/>{preview?"ویرایش":"پیش‌نمایش"}</button></div></header>
-  <div className="workspace">
-   <aside className="sidebar left"><div className="side-heading"><Layers3 size={17}/> اجزای صفحه</div><p className="hint">برای افزودن، روی هر جزء بزن</p><div className="component-grid">
-    {(["heading","text","button","image","link","section"] as Kind[]).map((k,i)=><button className="component" key={k} onClick={()=>add(k)}>{[<Type/>,<AlignRight/>,<MousePointer2/>,<Image/>,<Link2/>,<Layers3/>][i]}<span>{labels[k]}</span><Plus size={13}/></button>)}
-   </div><div className="side-heading layer-title"><Layers3 size={16}/> لایه‌ها <span>{blocks.length}</span></div><div className="layers">{blocks.map((b,i)=><button key={b.id} className={"layer "+(b.id===selected?"active":"")} onClick={()=>setSelected(b.id)}><span className="layer-index">{String(i+1).padStart(2,"0")}</span>{labels[b.kind]}<small>{b.content.slice(0,18)}</small></button>)}</div><div className="sidebar-bottom"><WandSparkles size={16}/> ساخته‌شده با APP FLOW</div></aside>
-   <main className="canvas-area"><div className="canvas-toolbar"><div><span className="live-dot"></span> بوم طراحی <small>• {blocks.length} جزء</small></div><div className="device-switch"><button className={device==="desktop"?"chosen":""} onClick={()=>setDevice("desktop")}><Monitor size={16}/></button><button className={device==="tablet"?"chosen":""} onClick={()=>setDevice("tablet")}><Tablet size={16}/></button><button className={device==="mobile"?"chosen":""} onClick={()=>setDevice("mobile")}><Smartphone size={16}/></button></div><div className="canvas-tools"><button onClick={()=>move(-1)} title="انتقال به بالا"><ArrowUp size={15}/></button><button onClick={()=>move(1)} title="انتقال به پایین"><ArrowDown size={15}/></button><button onClick={()=>{if(active){const id=crypto.randomUUID();setBlocks(x=>{const i=x.findIndex(v=>v.id===selected),y=[...x];y.splice(i+1,0,{...active,id});return y});setSelected(id)}}} title="کپی"><Copy size={15}/></button><button onClick={remove} title="حذف"><Trash2 size={15}/></button></div></div>
-    <div className="canvas-scroll"><div className={"artboard "+device}>{blocks.length?blocks.map(b=><div key={b.id} className={"block-wrap "+(selected===b.id&&!preview?"selected":"")} onClick={()=>!preview&&setSelected(b.id)}><div className="block-content" style={{color:b.color,background:b.background,fontSize:b.fontSize,padding:b.padding,textAlign:b.align}}>{b.kind==="heading"?<h1>{b.content}</h1>:b.kind==="text"?<p>{b.content}</p>:b.kind==="button"?<button className="render-button" style={{background:b.background,color:b.color}}>{b.content}</button>:b.kind==="image"?<img src={b.content} alt="تصویر پروژه"/>:b.kind==="link"?<a href="#" onClick={e=>e.preventDefault()}>{b.content}</a>:<div className="section-render">{b.content}</div>}</div>{selected===b.id&&!preview&&<span className="selection-tag">{labels[b.kind]}</span>}</div>):<div className="empty"><FilePlus2 size={34}/><b>صفحه‌ات هنوز خالی است</b><span>از پنل سمت راست یک جزء اضافه کن</span></div>}</div></div>
-    <div className="canvas-footer"><span>APP FLOW EDITOR</span><span>100% • ذخیره محلی فعال</span></div>
-   </main>
-   <aside className="sidebar right"><div className="side-heading">تنظیمات جزء <ChevronDown size={15}/></div>{active?<><div className="selected-card"><span className="selected-icon"><WandSparkles size={17}/></span><div><b>{labels[active.kind]}</b><small>تنظیمات ظاهری و محتوا</small></div></div><label className="field-label">محتوا</label><textarea className="content-input" value={active.content} onChange={e=>update({content:e.target.value})} rows={active.kind==="text"?4:2}/>{active.kind==="image"&&<p className="hint">آدرس مستقیم تصویر را وارد کن.</p>}<div className="setting-row"><label>رنگ نوشته</label><input type="color" value={active.color} onChange={e=>update({color:e.target.value})}/></div>{active.kind==="button"||active.kind==="section"?<div className="setting-row"><label>رنگ پس‌زمینه</label><input type="color" value={active.background==="transparent"?"#ffffff":active.background} onChange={e=>update({background:e.target.value})}/></div>:null}<div className="setting-block"><div className="setting-row"><label>اندازه فونت</label><b>{active.fontSize}px</b></div><input className="range" type="range" min="12" max="48" value={active.fontSize} onChange={e=>update({fontSize:Number(e.target.value)})}/></div><div className="setting-block"><div className="setting-row"><label>فاصله داخلی</label><b>{active.padding}px</b></div><input className="range" type="range" min="0" max="48" value={active.padding} onChange={e=>update({padding:Number(e.target.value)})}/></div><div className="setting-block"><label className="field-label">تراز محتوا</label><div className="align-buttons"><button className={active.align==="right"?"on":""} onClick={()=>update({align:"right"})}><AlignRight size={17}/></button><button className={active.align==="center"?"on":""} onClick={()=>update({align:"center"})}><AlignCenter size={17}/></button><button className={active.align==="left"?"on":""} onClick={()=>update({align:"left"})}><AlignLeft size={17}/></button></div></div><button className="delete-wide" onClick={remove}><Trash2 size={15}/> حذف این جزء</button></>:<div className="no-selection">برای ویرایش، یک جزء از صفحه را انتخاب کن.</div>}<div className="sidebar-bottom"><Save size={15}/> تغییرات روی همین دستگاه ذخیره می‌شود</div></aside>
-  </div>
- </div>
+function App() {
+  return (
+    <main className="home-page" dir="rtl">
+      <header className="home-header">
+        <div className="brand">
+          <div className="brand-mark"><Layers3 size={21} strokeWidth={2.2} /></div>
+          <div className="brand-copy"><strong>APP FLOW</strong><span>فضای ساخت اپلیکیشن</span></div>
+        </div>
+      </header>
+      <section className="home-content">
+        <div className="welcome">
+          <span className="eyebrow">WORKSPACE</span>
+          <h1>فضای کاری تو</h1>
+          <p>پروژه‌هایت را مدیریت کن و ایده‌های تازه بساز.</p>
+        </div>
+        <section className="quick-panel" aria-label="دسترسی‌های اصلی">
+          <button className="quick-item" type="button">
+            <span className="quick-icon"><FolderKanban size={21} /></span>
+            <span className="quick-label"><strong>مدیریت پروژه‌ها</strong><small>مشاهده و مدیریت پروژه‌ها</small></span>
+            <span className="item-arrow">←</span>
+          </button>
+          <div className="panel-divider" />
+          <button className="quick-item" type="button">
+            <span className="quick-icon settings-icon"><Settings2 size={21} /></span>
+            <span className="quick-label"><strong>تنظیمات</strong><small>تنظیمات فضای کاری</small></span>
+            <span className="item-arrow">←</span>
+          </button>
+        </section>
+        <section className="create-section">
+          <div className="section-heading"><div><span className="eyebrow">GET STARTED</span><h2>شروع یک ایده تازه</h2></div></div>
+          <button className="create-card" type="button">
+            <span className="create-icon"><Plus size={27} strokeWidth={1.8} /></span>
+            <span className="create-copy"><strong>ساخت پروژه جدید</strong><small>یک فضای تازه برای ساخت اپلیکیشن ایجاد کن</small></span>
+            <span className="create-arrow">←</span>
+          </button>
+        </section>
+      </section>
+      <footer className="home-footer"><span>APP FLOW</span><span>فضای ساخت و خلاقیت</span></footer>
+    </main>
+  );
 }
 export default App;
