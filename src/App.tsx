@@ -28,6 +28,7 @@ function App() {
   const [future, setFuture] = useState<AppProject[]>([]);
   const [confirmDelete, setConfirmDelete] = useState<ConfirmState>(null);
   const [toast, setToast] = useState("");
+  const [statusTime, setStatusTime] = useState(() => new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" }));
   const fileInputRef = useRef<HTMLInputElement>(null);
   const toastTimerRef = useRef<number | null>(null);
 
@@ -81,6 +82,12 @@ function App() {
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
   });
+
+  useEffect(() => {
+    const updateTime = () => setStatusTime(new Date().toLocaleTimeString("fa-IR", { hour: "2-digit", minute: "2-digit" }));
+    const timer = window.setInterval(updateTime, 30_000);
+    return () => window.clearInterval(timer);
+  }, []);
 
   useEffect(() => () => {
     if (toastTimerRef.current !== null) window.clearTimeout(toastTimerRef.current);
@@ -394,7 +401,7 @@ function App() {
             </div>
             <div className="builder-canvas">
               <div className={`preview-device preview-device-${previewMode}`}>
-                <div className="preview-status"><span>۹:۴۱</span><span>● ● ●</span></div>
+                <div className="preview-status"><span>{statusTime}</span><span>● ● ●</span></div>
                 <div className="preview-app-title">{activeProject.name || "پروژه جدید"}</div>
                 <div className="preview-content">
                   {activeProject.elements.length === 0 ? <div className="preview-empty"><Plus size={28} /><strong>صفحه شما خالی است</strong><span>از ابزارهای سمت صفحه، عنصر موردنظر را اضافه کن.</span></div> :
@@ -449,8 +456,7 @@ function App() {
           </aside>
         </div>
         <footer className="builder-footer">
-          <span>{savedState === "saving" ? "در حال ذخیره خودکار..." : savedState === "error" ? "خطا در ذخیره‌سازی" : "پروژه روی همین دستگاه ذخیره می‌شود"}</span>
-          <button onClick={() => void saveActiveProject()}><Save size={15} /> ذخیره پروژه</button>
+          <span>{savedState === "saving" ? "در حال ذخیره خودکار..." : savedState === "error" ? "ذخیره خودکار ناموفق بود؛ فضای دستگاه را بررسی کن." : "ذخیره خودکار روی همین دستگاه فعال است."}</span>
         </footer>
       </section>}
 
