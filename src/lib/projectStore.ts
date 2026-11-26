@@ -25,6 +25,7 @@ const DATABASE_NAME = "app-flow-database";
 const DATABASE_VERSION = 1;
 const STORE_NAME = "projects";
 const FALLBACK_KEY = "appflow-projects-v2";
+const LEGACY_KEY = "appflow-projects";
 
 function openDatabase(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -46,15 +47,91 @@ function openDatabase(): Promise<IDBDatabase> {
   });
 }
 
-function readFallback(): AppProject[] {
+function isElement(value: unknown): value is VisualElement {
+  if (!value || typeof value !== "object") return false;
+  const item = value as Partial<VisualElement>;
+  return typeof item.id === "string"
+    && ["text", "button", "input", "card"].includes(item.type ?? "")
+    && typeof item.text === "string"
+    && typeof item.color === "string"
+    && typeof item.background === "string"
+    && typeof item.fontSize === "number"
+    && typeof item.padding === "number"
+    && typeof item.radius === "number"
+    && ["right", "center", "left"].includes(item.align ?? "");
+}
+
+export function isValidProject(value: unknown): value is AppProject {
+  if (!value || typeof value !== "object") return false;
+  const project = value as Partial<AppProject>;
+  return typeof project.id === "string"
+    && typeof project.name === "string"
+    && Array.isArray(project.elements)
+    && typeof project.createdAt === "string"
+    && typeof project.updatedAt === "string"
+    && project.elements.every(isElement);
+}
+
+function migrateLegacyProjects(): AppProject[] {
   try {
-    const value = localStorage.getItem(FALLBACK_KEY);
-    if (!value) return [];
-    const parsed: unknown = JSON.parse(value);
-    return Array.isArray(parsed) ? parsed as AppProject[] : [];
+    const raw = localStorage.getItem(LEGACY_KEY);
+    if (!raw) return [];
+    const parsed: unknown = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    const migrated: AppProject[] = [];
+    for (const [index, rawProject] of parsed.entries()) {
+      if (!rawProject || typeof rawProject !== "object") continue;
+      const old = rawProject as { id?: unknown; name?: unknown; elements?: unknown; createdAt?: unknown; updatedAt?: unknown };
+      if (!Array.isArray(old.elements)) continue;
+      const now = new Date().toISOString();
+      const elements: VisualElement[] = old.elements.flatMap((rawElement, elementIndex) => {
+        if (!rawElement || typeof rawElement !== "object") return [];
+        const oldElement = rawElement as { id?: unknown; type?: unknown; text?: unknown };
+        const oldType = String(oldElement.type ?? "").toLowerCase();
+        const type: ElementKind = oldType.includes("button") ? "button"
+          : oldType.includes("edit") || oldType.includes("input") ? "input"
+          : oldType.includes("card") ? "card" : "text";
+        return [{
+          id: typeof oldElement.id === "string" ? oldElement.id : `migrated-${index}-${elementIndex}`,
+          type,
+          text: typeof oldElement.text === "string" ? oldElement.text : "عنصر بازیابی‌شده",
+          color: "#292930",
+          background: type === "button" ? "#ff0000" : "#ffffff",
+          fontSize: 14,
+          padding: 12,
+          radius: 10,
+          align: "right"
+        }];
+      });
+      migrated.push({
+        id: typeof old.id === "string" && old.id !== "current" ? old.id : `migrated-project-${index}-${Date.now()}`,
+        name: typeof old.name === "string" && old.name.trim() ? old.name : "پروژه بازیابی‌شده",
+        elements,
+        createdAt: typeof old.createdAt === "string" ? old.createdAt : now,
+        updatedAt: typeof old.updatedAt === "string" ? old.updatedAt : now
+      });
+    }
+    return migrated;
   } catch {
     return [];
   }
+}
+
+function readFallback(): AppProject[] {
+  try {
+    const value = localStorage.getItem(FALLBACK_KEY);
+    if (value) {
+      const parsed: unknown = JSON.parse(value);
+      if (Array.isArray(parsed) && parsed.every(isValidProject)) return parsed;
+    }
+  } catch {
+    // Continue with the legacy migration below.
+  }
+  const migrated = migrateLegacyProjects();
+  if (migrated.length) {
+    try { localStorage.setItem(FALLBACK_KEY, JSON.stringify(migrated)); } catch { /* IndexedDB remains the primary store. */ }
+  }
+  return migrated;
 }
 
 function writeFallback(projects: AppProject[]): void {
@@ -68,15 +145,35 @@ function requestResult<T>(request: IDBRequest<T>): Promise<T> {
   });
 }
 
+function sortProjects(projects: AppProject[]): AppProject[] {
+  return projects.sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+}
+
 export async function listProjects(): Promise<AppProject[]> {
   try {
     const database = await openDatabase();
-    const transaction = database.transaction(STORE_NAME, "readonly");
-    const records = await requestResult(transaction.objectStore(STORE_NAME).getAll());
+    const records = await requestResult(database.transaction(STORE_NAME, "readonly").objectStore(STORE_NAME).getAll()) as AppProject[];
     database.close();
-    return (records as AppProject[]).sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    const merged = new Map<string, AppProject>();
+    for (const project of records) if (isValidProject(project)) merged.set(project.id, project);
+    for (const project of readFallback()) {
+      const existing = merged.get(project.id);
+      if (!existing || project.updatedAt > existing.updatedAt) merged.set(project.id, project);
+    }
+    const result = sortProjects([...merged.values()]);
+    if (result.length !== records.length) {
+      const writeDb = await openDatabase();
+      const transaction = writeDb.transaction(STORE_NAME, "readwrite");
+      for (const project of result) transaction.objectStore(STORE_NAME).put(project);
+      await new Promise<void>((resolve, reject) => {
+        transaction.oncomplete = () => resolve();
+        transaction.onerror = () => reject(transaction.error ?? new Error("بازیابی اطلاعات ناموفق بود."));
+      });
+      writeDb.close();
+    }
+    return result;
   } catch {
-    return readFallback().sort((a, b) => b.updatedAt.localeCompare(a.updatedAt));
+    return sortProjects(readFallback());
   }
 }
 
@@ -91,6 +188,10 @@ export async function saveProject(project: AppProject): Promise<void> {
       transaction.onabort = () => reject(transaction.error ?? new Error("ذخیره پروژه لغو شد."));
     });
     database.close();
+    try {
+      const projects = readFallback().filter(item => item.id !== project.id);
+      writeFallback([project, ...projects]);
+    } catch { /* IndexedDB save has succeeded. */ }
   } catch (databaseError) {
     try {
       const projects = readFallback().filter(item => item.id !== project.id);
@@ -102,6 +203,7 @@ export async function saveProject(project: AppProject): Promise<void> {
 }
 
 export async function deleteProject(projectId: string): Promise<void> {
+  let databaseError: unknown = null;
   try {
     const database = await openDatabase();
     const transaction = database.transaction(STORE_NAME, "readwrite");
@@ -112,8 +214,16 @@ export async function deleteProject(projectId: string): Promise<void> {
       transaction.onabort = () => reject(transaction.error ?? new Error("حذف پروژه لغو شد."));
     });
     database.close();
-  } catch {
+  } catch (error) {
+    databaseError = error;
+  }
+  try {
     writeFallback(readFallback().filter(item => item.id !== projectId));
+  } catch (error) {
+    if (databaseError) throw error;
+  }
+  if (databaseError && readFallback().some(item => item.id === projectId)) {
+    throw databaseError instanceof Error ? databaseError : new Error("حذف پروژه ناموفق بود.");
   }
 }
 
@@ -145,29 +255,6 @@ export function createElement(type: ElementKind): VisualElement {
     radius: 10,
     align: "right"
   };
-}
-
-export function isValidProject(value: unknown): value is AppProject {
-  if (!value || typeof value !== "object") return false;
-  const project = value as Partial<AppProject>;
-  return typeof project.id === "string"
-    && typeof project.name === "string"
-    && Array.isArray(project.elements)
-    && typeof project.createdAt === "string"
-    && typeof project.updatedAt === "string"
-    && project.elements.every(element => {
-      if (!element || typeof element !== "object") return false;
-      const item = element as Partial<VisualElement>;
-      return typeof item.id === "string"
-        && ["text", "button", "input", "card"].includes(item.type ?? "")
-        && typeof item.text === "string"
-        && typeof item.color === "string"
-        && typeof item.background === "string"
-        && typeof item.fontSize === "number"
-        && typeof item.padding === "number"
-        && typeof item.radius === "number"
-        && ["right", "center", "left"].includes(item.align ?? "");
-    });
 }
 
 export function parseProjectBackup(json: string): AppProject[] {
