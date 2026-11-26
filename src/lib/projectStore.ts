@@ -9,6 +9,7 @@ export type VisualElement = {
   background: string;
   fontSize: number;
   padding: number;
+  margin: number;
   radius: number;
   align: TextAlignment;
 };
@@ -99,6 +100,7 @@ function migrateLegacyProjects(): AppProject[] {
           background: type === "button" ? "#ff0000" : "#ffffff",
           fontSize: 14,
           padding: 12,
+          margin: 7,
           radius: 10,
           align: "right"
         }];
@@ -256,6 +258,7 @@ export function createElement(type: ElementKind): VisualElement {
     background: type === "button" ? "#ff0000" : "#ffffff",
     fontSize: type === "text" ? 16 : 14,
     padding: 12,
+    margin: 7,
     radius: 10,
     align: "right"
   };
